@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="fancySpellCheck"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry excluding="program/" kind="src" path="icons"/>
+	<classpathentry kind="src" path="spinner"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
