@@ -1,6 +1,8 @@
 package tabs;
 
 import java.awt.GridBagLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -17,10 +19,15 @@ public class FancyTabPanel extends FancyPanel {
 
 	private ArrayList<FancyTab> tabs = new ArrayList<FancyTab>();
 
+	private FancyPanel underline = new FancyPanel();
+	
 	public FancyPanel tabPanel = new FancyPanel();
 
 	public JComponent current;
-
+	
+	public int tabHeight = 50;// 25;
+	public int tabWidth  = 120;
+	
 	public FancyTabPanel() {
 		setUp();
 	}
@@ -38,10 +45,17 @@ public class FancyTabPanel extends FancyPanel {
 		setLayout(new GridBagLayout());
 		setBackground(FancyTab.mouseOff);
 		setUpTabs();
+		
+		this.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				underline.setBounds(0, tabHeight, getWidth(), 5);
+			}
+		});
 	}
 
 	private void setUpTabs() {
-		tabPanel.setLayout(null);//new GridBagLayout());
+		tabPanel.setLayout(null);
 		tabPanel.setBackground(FancyTab.mouseOff);
 		FancyComponentUtils.setFixedSize(tabPanel, 120, 30);
 
@@ -63,21 +77,19 @@ public class FancyTabPanel extends FancyPanel {
 			tabPanel.add(ft);
 
 			if(ft.drawingOffset != 0) {
-				ft.setBounds(ft.drawingOffset, y, 120, 25);
+				ft.setBounds(ft.drawingOffset, y, tabWidth, tabHeight);
 				ft.drawingOffset = 0;
 			} else {
-				ft.setBounds(x, y, 120, 25);
+				ft.setBounds(x, y, tabWidth, tabHeight);
 			}
 
 			x+= ft.getWidth();
 		}
 
-		FancyPanel underline = new FancyPanel();
-		FancyComponentUtils.setFixedSize(underline, 300, 5);
 		underline.setBackground(FancyTab.selected);
 
 		tabPanel.add(underline);
-		underline.setBounds(0, 25, getWidth(), 5);
+		underline.setBounds(0, tabHeight, getWidth(), 5);
 
 		tabPanel.revalidate();
 		tabPanel.repaint();
@@ -92,7 +104,8 @@ public class FancyTabPanel extends FancyPanel {
 			}
 
 			current = new FancyPanel();
-			GBC.addWithGBC(this, current, 1.0, 1.0, 0, 1, GBC.BOTH, GBC.CENT, GBC.insets(0, 0, 0, 0), 1);
+			GBC.addWithGBC(this, current, 1.0, 1.0, 0, 1, GBC.BOTH, GBC.CENT, 
+					GBC.insets(0, 0, 0, 0), 1);
 
 			addAllTabs();
 
@@ -159,10 +172,6 @@ public class FancyTabPanel extends FancyPanel {
 		tab.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-
-				//tab.drawingOffset = e.getX();
-				//	addAllTabs();
-
 				for(FancyTab t : tabs) {
 					if(t != tab) {
 						if(e.getX() > t.getX() && t.getX() > tab.getX()) {
@@ -180,18 +189,18 @@ public class FancyTabPanel extends FancyPanel {
 		});
 	}
 
-	private void swapTabPositions(FancyTab t, FancyTab tab) {
-		int toReplace = tabs.indexOf(t);
+	private void swapTabPositions(FancyTab a, FancyTab b) {
+		int toReplace = tabs.indexOf(a);
 
-		FancyTab backup = tab.clone();
+		FancyTab backup = b.clone();
 
-		tabs.set(tabs.indexOf(tab), t);
+		tabs.set(tabs.indexOf(b), a);
 		tabs.set(toReplace, backup);
 
-		if(tab.isSelected) {
+		if(b.isSelected) {
 			setTabSelected(backup);
-		} else if(t.isSelected) {
-			setTabSelected(t);
+		} else if(a.isSelected) {
+			setTabSelected(a);
 		}
 
 		addAllTabs();
@@ -217,7 +226,8 @@ public class FancyTabPanel extends FancyPanel {
 		}
 
 		current = tab.component;
-		GBC.addWithGBC(this, current, 1.0, 1.0, 0, 1, GBC.BOTH, GBC.CENT, GBC.insets(0, 0, 0, 0), 1);
+		GBC.addWithGBC(this, current, 1.0, 1.0, 0, 1, GBC.BOTH, GBC.CENT,
+				GBC.insets(0, 0, 0, 0), 1);
 
 		current.revalidate();
 		current.repaint();

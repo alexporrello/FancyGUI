@@ -1,6 +1,7 @@
 package tabs;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
@@ -13,10 +14,18 @@ public class FancyTabPanelTester extends FancyFrame {
 	public FancyTabPanelTester() {
 		setLayout(new BorderLayout());
 		
+		FancyPanel a = new FancyPanel();
+		FancyPanel b = new FancyPanel();
+		FancyPanel c = new FancyPanel();
+		
+		a.setBackground(Color.BLACK);
+		b.setBackground(Color.BLACK);
+		c.setBackground(Color.BLACK);
+		
 		ArrayList<FancyTab> tabs = new ArrayList<FancyTab>();
-		tabs.add(new FancyTab("Hello!", new FancyPanel()));
-		tabs.add(new FancyTab("Hello 2!", new FancyPanel()));
-		tabs.add(new FancyTab("Hello 3!", new FancyPanel()));
+		tabs.add(new FancyTab("Hello 1!", a));
+		tabs.add(new FancyTab("Hello 2!", b));
+		tabs.add(new FancyTab("Hello 3!", c));
 		
 		add(new FancyTabPanel(tabs), BorderLayout.NORTH);
 		
