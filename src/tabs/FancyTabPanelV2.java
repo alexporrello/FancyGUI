@@ -1,19 +1,17 @@
 package tabs;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 import javax.swing.JButton;
@@ -26,185 +24,91 @@ import displays.FancyPanel;
 public class FancyTabPanelV2 extends FancyPanel {
 	private static final long serialVersionUID = 3467583173655155282L;
 
-	FancyTabContainer tabs = new FancyTabContainer();
-
-	public int tabHeight = 25;
-	public int tabWidth  = 150;
-
-	int mouseClickPosn;
-
-	Timer swapRightTimer;
-	Timer swapLeftTimer;
-	Timer swapRightReleaseTimer;
-	Timer swapLeftReleaseTimer;
-	Timer returnTimer;
-
-	FancyTab2 pressedTab;
-	FancyTab2 swappedTab;
-
-	Boolean swappedRight = false;
-	Boolean swappedLeft  = false;
-
+	FancyTabOrganizer tabs = new FancyTabOrganizer();
+	
+	JComponent inView = new FancyPanel();
+	
 	public FancyTabPanelV2() {
-		setPreferredSize(new Dimension(500, tabHeight + 350));
-
-		addTab("Testing", new FancyPanel());
-		addTab("Testing 2", new FancyPanel());
-		addTab("Testing 3", new FancyPanel());
+		tabs.addTab("Testing", test(Color.RED));
+		tabs.addTab("Testing 2", test(Color.BLUE));
+		tabs.addTab("Testing 3", test(Color.ORANGE));
 		
-		makeSwapReleaseTimers();
-		makeSwapTimers();
-		makeReturnTimer();
+		setLayout(new BorderLayout());
+		
+		add(tabs, BorderLayout.NORTH);
+		add(inView, BorderLayout.CENTER);
+		
 		addMouseListener();
 		addMouseMotionListener();
 	}
 	
-	public void addTab(String title, JComponent component) {
-		tabs.add(new FancyTab2(title, tabWidth, tabHeight, tabs.size(), component));
-	}
-
-	public void makeReturnTimer() {
-		returnTimer = new Timer(0, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				if(pressedTab.x > pressedTab.determineXPosition()) {
-					pressedTab.x = pressedTab.x - 1;
-					repaint();
-				} else if(pressedTab.x < pressedTab.determineXPosition()) {
-					pressedTab.x = pressedTab.x + 1;
-					repaint();
-				} else {
-					returnTimer.stop();
-				}
-			}
-		});
-	}
-
-	public void makeSwapTimers() {
-		swapRightTimer = new Timer(0, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				swappedRight = true;
-
-				if(swappedTab.x > pressedTab.determineXPosition()) {
-					swappedTab.x = swappedTab.x - 1;
-					repaint();
-				} else {
-					swapRightTimer.stop();
-				}
-			}
-		});
-
-		swapLeftTimer = new Timer(0, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				swappedLeft = true;
-
-				if(swappedTab.x < pressedTab.determineXPosition()) {
-					swappedTab.x = swappedTab.x + 1;
-					repaint();
-				} else {
-					swapLeftTimer.stop();
-				}
-			}
-		});
-	}
-
-	public void makeSwapReleaseTimers() {
-		swapRightReleaseTimer = new Timer(1, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				swappedRight = false;
-
-				if(pressedTab.x < swappedTab.determineXPosition()) {
-					pressedTab.x = pressedTab.x + 1;
-
-					repaint();
-				} else {
-					swapTabPosns(pressedTab, swappedTab);
-					swapRightReleaseTimer.stop();
-				}
-			}
-		});
-
-		swapLeftReleaseTimer = new Timer(1, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				swappedLeft = false;
-
-				if(pressedTab.x > swappedTab.determineXPosition()) {
-					pressedTab.x = pressedTab.x - 1;
-
-					repaint();
-				} else {
-					swapTabPosns(pressedTab, swappedTab);
-					swapLeftReleaseTimer.stop();
-				}
-			}
-		});
+	public FancyPanel test(Color color) {
+		FancyPanel fp = new FancyPanel();
+		fp.setBackground(color);
+		return fp;
 	}
 	
-	public void swapTabPosns(FancyTab2 a, FancyTab2 b) {
-		int indexA = a.posn;
-		int indexB = b.posn;
-
-		a.posn = indexB;
-		b.posn = indexA;
+	public void switchJComponentInView(FancyTab2 newTab) {
+		remove(inView);
+		inView = newTab.content;
+		add(inView, BorderLayout.CENTER);
+		
+		revalidate();
+		repaint();
 	}
-
+	
 	public void addMouseListener() {
-		addMouseListener(new MouseAdapter() {
+		tabs.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				mouseClickPosn = e.getX();		
+				tabs.mouseClickPosn = e.getX();		
 
-				if(swappedRight) {
-					swapRightReleaseTimer.start();
-				} else if(swappedLeft) {
-					swapLeftReleaseTimer.start();
+				if(tabs.swappedRight) {
+					tabs.swapRightReleaseTimer.start();
+				} else if(tabs.swappedLeft) {
+					tabs.swapLeftReleaseTimer.start();
 				} else {
-					returnTimer.start();
+					tabs.returnTimer.start();
 				}
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				pressedTab     = tabs.get(e.getX(), e.getY());
-				mouseClickPosn = e.getX() - pressedTab.x;
-				
-				repaint();
-			}
+				tabs.pressedTab     = tabs.tabs.get(e.getX(), e.getY());
+				tabs.mouseClickPosn = e.getX() - tabs.pressedTab.x;
 
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO show window contents
+				tabs.tabs.setSelectedIndex(tabs.pressedTab);
+
+				switchJComponentInView(tabs.pressedTab);
+
+				repaint();
 			}
 		});
 	}
 
 	public void addMouseMotionListener() {
-		addMouseMotionListener(new MouseMotionAdapter() {
+		tabs.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
-				pressedTab.x = arg0.getX() - mouseClickPosn;
+				tabs.pressedTab.x = arg0.getX() - tabs.mouseClickPosn;
 
 				try {					
-					FancyTab2 rightTab = tabs.getRightTab(pressedTab);
+					FancyTab2 rightTab = tabs.tabs.getRightTab(tabs.pressedTab);
 
-					if(pressedTab.x + (pressedTab.width/2) > rightTab.x) {
-						swappedTab = rightTab;
-						swapRightTimer.start();
+					if(tabs.pressedTab.x + (tabs.pressedTab.width/2) > rightTab.x) {
+						tabs.swappedTab = rightTab;
+						tabs.swapRightTimer.start();
 					}
 				} catch (NoSuchElementException e) {}
 
 				try {
-					FancyTab2 leftTab = tabs.getLeftTab(pressedTab);
+					FancyTab2 leftTab = tabs.tabs.getLeftTab(tabs.pressedTab);
 
-					if((pressedTab.x < leftTab.x + (leftTab.width/2))
-							&& (pressedTab.x > leftTab.x)) {
-						swappedTab = leftTab;
-						swapLeftTimer.start();
+					if((tabs.pressedTab.x < leftTab.x + (leftTab.width/2))
+							&& (tabs.pressedTab.x > leftTab.x)) {
+						tabs.swappedTab = leftTab;
+						tabs.swapLeftTimer.start();
 					}
 
 				} catch (NoSuchElementException e) {}
@@ -214,140 +118,184 @@ public class FancyTabPanelV2 extends FancyPanel {
 			}
 		});
 	}
-
-	@Override
-	public void paintComponent(Graphics g) {
-		Graphics2D gg = (Graphics2D) g;
-		gg.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-
-		gg.setColor(Color.LIGHT_GRAY);
-		gg.fillRect(0, 0, getWidth(), getHeight());
-
-		Font a = new JButton().getFont();
-		gg.setFont(new Font(a.getName(), a.getStyle(), 13));
-
-		for(FancyTab2 tab : tabs) {
-			if(pressedTab != null && tab.posn == pressedTab.posn) {
-				gg.setColor(Color.decode("#F0F0F0"));
-			} else {
-				gg.setColor(Color.LIGHT_GRAY);
-			}
-			
-			gg.fillRect(tab.x, tab.y, tabWidth, tabHeight);
-			gg.setColor(Color.BLACK);
-			gg.drawString(tab.text, tab.x + 6, tab.y + tabHeight-8);
-		}
-		
-		gg.setColor(Color.decode("#F0F0F0"));
-		gg.fillRect(0, tabHeight, getWidth(), 5);
-	}
-
-
+	
 	/**
-	 * Contains several useful methods to quickly access tabs.
+	 * This is where all of the tab magic happens.
 	 * @author Alexander Porrello
 	 */
-	public class FancyTabContainer extends ArrayList<FancyTab2> {
-		private static final long serialVersionUID = -1272719320778131995L;
+	public class FancyTabOrganizer extends FancyPanel {
+		private static final long serialVersionUID = 1L;
 
-		public FancyTabContainer() {
+		FancyTabContainer tabs = new FancyTabContainer();
 
+		public int tabHeight = 25;
+		public int tabWidth  = 150;
+
+		int mouseClickPosn;
+
+		Timer swapRightTimer;
+		Timer swapLeftTimer;
+		Timer swapRightReleaseTimer;
+		Timer swapLeftReleaseTimer;
+		Timer returnTimer;
+
+		FancyTab2 pressedTab;
+		FancyTab2 swappedTab;
+
+		Boolean swappedRight = false;
+		Boolean swappedLeft  = false;
+
+		public FancyTabOrganizer() {
+			setPreferredSize(new Dimension(500, tabHeight + 5));
+
+			makeSwapReleaseTimers();
+			makeSwapTimers();
+			makeReturnTimer();
+		}
+
+		public void addTab(String title, JComponent component) {
+			tabs.add(new FancyTab2(title, tabWidth, tabHeight, tabs.size(), component));
 		}
 
 		/**
-		 * Returns a tab if it has been clicked on.
-		 * @param x the x posn of the cursor
-		 * @param y the y posn of the cursor
-		 * @return a tab if it has been clicked on.
+		 * Initializes the timer responsible for returning Tabs back to their 
+		 * proper position.
 		 */
-		public FancyTab2 get(int x, int y) {
-			for(FancyTab2 ft : this) {
-				if(ft.contains(new Point(x, y))) {
-					return ft;
+		public void makeReturnTimer() {
+			returnTimer = new Timer(0, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent ae) {
+					if(pressedTab.x > pressedTab.determineXPosition()) {
+						pressedTab.x = pressedTab.x - 1;
+						repaint();
+					} else if(pressedTab.x < pressedTab.determineXPosition()) {
+						pressedTab.x = pressedTab.x + 1;
+						repaint();
+					} else {
+						returnTimer.stop();
+					}
 				}
-			}
-
-			throw new NoSuchElementException();
+			});
 		}
 
 		/**
-		 * Returns a tab given its position.
-		 * @param  posn the posn of the tab to be returned.
-		 * @return the proper posn.
+		 * Initializes the timers responsible for swapping tabs.
 		 */
-		public FancyTab2 get(int posn) {
-			for(FancyTab2 ft : this) {
-				if(ft.posn == posn) {
-					return ft;
+		public void makeSwapTimers() {
+			swapRightTimer = new Timer(0, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent ae) {
+					swappedRight = true;
+
+					if(swappedTab.x > pressedTab.determineXPosition()) {
+						swappedTab.x = swappedTab.x - 1;
+						repaint();
+					} else {
+						swapRightTimer.stop();
+					}
 				}
-			}
+			});
 
-			throw new NoSuchElementException();
+			swapLeftTimer = new Timer(0, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent ae) {
+					swappedLeft = true;
+
+					if(swappedTab.x < pressedTab.determineXPosition()) {
+						swappedTab.x = swappedTab.x + 1;
+						repaint();
+					} else {
+						swapLeftTimer.stop();
+					}
+				}
+			});
 		}
 
 		/**
-		 * Returns the tile to the right of a given tile.
-		 * @param ft the given tile.
-		 * @return the tile to the right of the given tile.
+		 * Initializes the timers that are responsible for setting a released
+		 *  tab in its proper position.
 		 */
-		public FancyTab2 getRightTab(FancyTab2 ft) {
-			if(ft.posn + 1 <= this.size()) {
-				return get(ft.posn + 1);
-			} else {
-				throw new NoSuchElementException();
-			}
+		public void makeSwapReleaseTimers() {
+			swapRightReleaseTimer = new Timer(1, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent ae) {
+					swappedRight = false;
+
+					if(pressedTab.x < swappedTab.determineXPosition()) {
+						pressedTab.x = pressedTab.x + 1;
+
+						repaint();
+					} else {
+						swapTabIndices(pressedTab, swappedTab);
+						swapRightReleaseTimer.stop();
+					}
+				}
+			});
+
+			swapLeftReleaseTimer = new Timer(1, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent ae) {
+					swappedLeft = false;
+
+					if(pressedTab.x > swappedTab.determineXPosition()) {
+						pressedTab.x = pressedTab.x - 1;
+
+						repaint();
+					} else {
+						swapTabIndices(pressedTab, swappedTab);
+						swapLeftReleaseTimer.stop();
+					}
+				}
+			});
 		}
 
 		/**
-		 * Returns the tile to the left of a given tile.
-		 * @param ft the given tile.
-		 * @return the tile to the right of the given tile.
+		 * Swaps the indices of two given tabs.
+		 * @param a the first tab whose index is to be swapped
+		 * @param b the second tab whose index is to be swapped
 		 */
-		public FancyTab2 getLeftTab(FancyTab2 ft) {
-			if(ft.posn - 1 >= 0) {
-				return get(ft.posn - 1);
-			} else {
-				throw new NoSuchElementException();
+		public void swapTabIndices(FancyTab2 a, FancyTab2 b) {
+			int indexA = a.index;
+			int indexB = b.index;
+
+			a.index = indexB;
+			b.index = indexA;
+		}
+
+		
+
+		@Override
+		public void paintComponent(Graphics g) {
+			Graphics2D gg = (Graphics2D) g;
+			gg.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+			gg.setColor(Color.LIGHT_GRAY);
+			gg.fillRect(0, 0, getWidth(), getHeight());
+
+			Font a = new JButton().getFont();
+			gg.setFont(new Font(a.getName(), a.getStyle(), 13));
+
+			for(FancyTab2 tab : tabs) {
+				gg.setColor(Color.LIGHT_GRAY);
+				gg.fillRect(tab.x, tab.y, tabWidth, tabHeight);
+				gg.setColor(Color.BLACK);
+				gg.drawString(tab.text, tab.x + 6, tab.y + tabHeight-8);
+				
+//				if(tabs.getRightTab(tab).index != tabs.selected.index
+//						&& tab.index != tabs.selected.index) {
+//					gg.fillRect(1, 5, 1, 5);
+//				}
+						
 			}
-		}
-	}
 
-	public class FancyTab2 {
+			gg.setColor(Color.decode("#F0F0F0"));
+			gg.fillRect(0, tabHeight, getWidth(), 5);
 
-		public String text;
-
-		public int x;
-		public int y;
-		public int width;
-		public int height;
-
-		public JComponent content;
-
-		public int posn;
-
-		public FancyTab2(String title, int width, int height, 
-				int posn, JComponent content) {
-			this.text     = title;
-			this.width    = width;
-			this.height   = height;
-			this.content  = content;
-			this.posn     = posn;
-			this.y        = 0;
-			this.x        = determineXPosition();
-		}
-
-		public int determineXPosition() {
-			return (posn * width) + posn;
-		}
-
-		/**
-		 * Checks if a given point is contained within this tab.
-		 * @param p the point to check.
-		 * @return true if the tab contains the point; else, false
-		 */
-		public boolean contains(Point p) {
-			return new Rectangle(x, y, width, height).contains(
-					new Point(p.x, p.y));
+			if(tabs.selected != null) {
+				gg.fillRect(tabs.selected.x, tabs.selected.y, tabWidth, tabHeight);
+				gg.setColor(Color.BLACK);
+				gg.drawString(tabs.selected.text, tabs.selected.x + 6, tabs.selected.y + tabHeight-8);
+			}
 		}
 	}
 
