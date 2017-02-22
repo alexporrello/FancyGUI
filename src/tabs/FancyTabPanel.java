@@ -1,6 +1,7 @@
 package tabs;
 
 import java.awt.GridBagLayout;
+import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -20,14 +21,14 @@ public class FancyTabPanel extends FancyPanel {
 	private ArrayList<FancyTab> tabs = new ArrayList<FancyTab>();
 
 	private FancyPanel underline = new FancyPanel();
-	
+
 	public FancyPanel tabPanel = new FancyPanel();
 
 	public JComponent current;
-	
-	public int tabHeight = 50;// 25;
+
+	public int tabHeight = 25;
 	public int tabWidth  = 120;
-	
+
 	public FancyTabPanel() {
 		setUp();
 	}
@@ -45,7 +46,7 @@ public class FancyTabPanel extends FancyPanel {
 		setLayout(new GridBagLayout());
 		setBackground(FancyTab.mouseOff);
 		setUpTabs();
-		
+
 		this.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
@@ -174,13 +175,13 @@ public class FancyTabPanel extends FancyPanel {
 			public void mouseDragged(MouseEvent e) {
 				for(FancyTab t : tabs) {
 					if(t != tab) {
-						if(e.getX() > t.getX() && t.getX() > tab.getX()) {
-							swapTabPositions(t, tab);
+						if(e.getX() > t.getX() && t.getX() > tab.getX()) {						
+							swapTabPositions(t, tab, e.getPoint());
 							break;
 						}
 
 						if(e.getX() < t.getX() && t.getX() < tab.getX()) {
-							swapTabPositions(tab, t);
+							swapTabPositions(tab, t, e.getPoint());
 							break;
 						}
 					}
@@ -189,7 +190,7 @@ public class FancyTabPanel extends FancyPanel {
 		});
 	}
 
-	private void swapTabPositions(FancyTab a, FancyTab b) {
+	private void swapTabPositions(FancyTab a, FancyTab b, Point mouse) {
 		int toReplace = tabs.indexOf(a);
 
 		FancyTab backup = b.clone();
@@ -203,7 +204,24 @@ public class FancyTabPanel extends FancyPanel {
 			setTabSelected(a);
 		}
 
-		addAllTabs();
+		animateTabSwapping(a, backup, mouse);
+	}
+
+	public void animateTabSwapping(FancyTab a, FancyTab b, Point mouse) {
+		
+		for(int i = a.getX(); i > 0; i--) {
+			b.setBounds(25, 0, tabWidth, tabHeight);
+			
+			
+			
+			try {
+				Thread.sleep(0);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			addAllTabs();
+		}
 	}
 
 	public void setTabSelected(FancyTab tab) {
