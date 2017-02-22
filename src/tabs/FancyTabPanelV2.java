@@ -32,7 +32,6 @@ public class FancyTabPanelV2 extends FancyPanel {
 	public int tabWidth  = 150;
 
 	int mouseClickPosn;
-	//int movingTabPosn;
 
 	Timer swapRightTimer;
 	Timer swapLeftTimer;
@@ -45,26 +44,48 @@ public class FancyTabPanelV2 extends FancyPanel {
 
 	Boolean swappedRight = false;
 	Boolean swappedLeft  = false;
-	
-	public FancyTabPanelV2() {
-		setPreferredSize(new Dimension(500, tabHeight));
-		tabs.add(new FancyTab2("Testing", tabWidth, tabHeight, 0, new FancyPanel()));
-		tabs.add(new FancyTab2("Testing2", tabWidth, tabHeight, 1, new FancyPanel()));
-		tabs.add(new FancyTab2("Testing3", tabWidth, tabHeight, 2, new FancyPanel()));
 
+	public FancyTabPanelV2() {
+		setPreferredSize(new Dimension(500, tabHeight + 350));
+
+		addTab("Testing", new FancyPanel());
+		addTab("Testing 2", new FancyPanel());
+		addTab("Testing 3", new FancyPanel());
+		
 		makeSwapReleaseTimers();
 		makeSwapTimers();
-		//TODO makeReturnTimer();
+		makeReturnTimer();
 		addMouseListener();
 		addMouseMotionListener();
 	}
 	
+	public void addTab(String title, JComponent component) {
+		tabs.add(new FancyTab2(title, tabWidth, tabHeight, tabs.size(), component));
+	}
+
+	public void makeReturnTimer() {
+		returnTimer = new Timer(0, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				if(pressedTab.x > pressedTab.determineXPosition()) {
+					pressedTab.x = pressedTab.x - 1;
+					repaint();
+				} else if(pressedTab.x < pressedTab.determineXPosition()) {
+					pressedTab.x = pressedTab.x + 1;
+					repaint();
+				} else {
+					returnTimer.stop();
+				}
+			}
+		});
+	}
+
 	public void makeSwapTimers() {
-		swapRightTimer = new Timer(1, new ActionListener() {
+		swapRightTimer = new Timer(0, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				swappedRight = true;
-				
+
 				if(swappedTab.x > pressedTab.determineXPosition()) {
 					swappedTab.x = swappedTab.x - 1;
 					repaint();
@@ -73,12 +94,12 @@ public class FancyTabPanelV2 extends FancyPanel {
 				}
 			}
 		});
-		
-		swapLeftTimer = new Timer(1, new ActionListener() {
+
+		swapLeftTimer = new Timer(0, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				swappedLeft = true;
-				
+
 				if(swappedTab.x < pressedTab.determineXPosition()) {
 					swappedTab.x = swappedTab.x + 1;
 					repaint();
@@ -88,24 +109,19 @@ public class FancyTabPanelV2 extends FancyPanel {
 			}
 		});
 	}
-	
+
 	public void makeSwapReleaseTimers() {
 		swapRightReleaseTimer = new Timer(1, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				swappedRight = false;
-				
+
 				if(pressedTab.x < swappedTab.determineXPosition()) {
 					pressedTab.x = pressedTab.x + 1;
 
 					repaint();
 				} else {
-					int indexA = pressedTab.posn;
-					int indexB = swappedTab.posn;
-
-					pressedTab.posn = indexB;
-					swappedTab.posn = indexA;
-
+					swapTabPosns(pressedTab, swappedTab);
 					swapRightReleaseTimer.stop();
 				}
 			}
@@ -115,22 +131,25 @@ public class FancyTabPanelV2 extends FancyPanel {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				swappedLeft = false;
-				
+
 				if(pressedTab.x > swappedTab.determineXPosition()) {
 					pressedTab.x = pressedTab.x - 1;
 
 					repaint();
 				} else {
-					int indexA = pressedTab.posn;
-					int indexB = swappedTab.posn;
-
-					pressedTab.posn = indexB;
-					swappedTab.posn = indexA;
-
+					swapTabPosns(pressedTab, swappedTab);
 					swapLeftReleaseTimer.stop();
 				}
 			}
 		});
+	}
+	
+	public void swapTabPosns(FancyTab2 a, FancyTab2 b) {
+		int indexA = a.posn;
+		int indexB = b.posn;
+
+		a.posn = indexB;
+		b.posn = indexA;
 	}
 
 	public void addMouseListener() {
@@ -144,6 +163,8 @@ public class FancyTabPanelV2 extends FancyPanel {
 					swapRightReleaseTimer.start();
 				} else if(swappedLeft) {
 					swapLeftReleaseTimer.start();
+				} else {
+					returnTimer.start();
 				}
 			}
 
@@ -151,6 +172,8 @@ public class FancyTabPanelV2 extends FancyPanel {
 			public void mousePressed(MouseEvent e) {
 				pressedTab     = tabs.get(e.getX(), e.getY());
 				mouseClickPosn = e.getX() - pressedTab.x;
+				
+				repaint();
 			}
 
 			@Override
@@ -204,11 +227,19 @@ public class FancyTabPanelV2 extends FancyPanel {
 		gg.setFont(new Font(a.getName(), a.getStyle(), 13));
 
 		for(FancyTab2 tab : tabs) {
-			gg.setColor(Color.decode("#F0F0F0"));
+			if(pressedTab != null && tab.posn == pressedTab.posn) {
+				gg.setColor(Color.decode("#F0F0F0"));
+			} else {
+				gg.setColor(Color.LIGHT_GRAY);
+			}
+			
 			gg.fillRect(tab.x, tab.y, tabWidth, tabHeight);
 			gg.setColor(Color.BLACK);
 			gg.drawString(tab.text, tab.x + 6, tab.y + tabHeight-8);
 		}
+		
+		gg.setColor(Color.decode("#F0F0F0"));
+		gg.fillRect(0, tabHeight, getWidth(), 5);
 	}
 
 
