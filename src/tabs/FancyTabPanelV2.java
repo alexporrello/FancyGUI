@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -32,30 +33,37 @@ public class FancyTabPanelV2 extends FancyPanel {
 	private JComponent inView = new FancyPanel();
 
 	private Color xColor = FancyColor.DARK_GRAY;
-	
-	public FancyTabPanelV2() {
-		tabs.addTab("Testing", test(Color.RED));
-		tabs.addTab("Testing 2", test(Color.BLUE));
-		tabs.addTab("Testing 3", test(Color.ORANGE));
-		
-		tabs.tabs.selected = tabs.tabs.get(0);
-		
+
+	public FancyTabPanelV2() {	
 		setLayout(new BorderLayout());
 
 		add(tabs, BorderLayout.NORTH);
 		add(inView, BorderLayout.CENTER);
-
-		addMouseListener();
-		addMouseMotionListener();
 	}
 
-	public FancyPanel test(Color color) {
-		FancyPanel fp = new FancyPanel();
-		fp.setBackground(color);
-		return fp;
+	/**
+	 * Method used to add a tab.
+	 * @param title the tab's title
+	 * @param component the component to be displayed when the tab's clicked
+	 * @param closeListener the action taken when the close is pressed
+	 */
+	public void addTab(String title, JComponent component, Consumer<MouseEvent> closeListener) {
+		tabs.addTab(title, component, closeListener);
 	}
 
-	public void switchJComponentInView(FancyTab2 newTab) {
+	/**
+	 * Method used to remove a tab.
+	 * @param tab the tab to be removed
+	 */
+	public void removeTab(String tabTitle) {
+		tabs.removeTab(tabTitle);
+	}
+
+	/**
+	 * Changes between the JComponent that is displayed.
+	 * @param newTab the tab whose JComponent is to be displayed
+	 */
+	private void switchJComponentInView(FancyTab2 newTab) {
 		remove(inView);
 		inView = newTab.content;
 		add(inView, BorderLayout.CENTER);
@@ -64,88 +72,11 @@ public class FancyTabPanelV2 extends FancyPanel {
 		repaint();
 	}
 
-	public void addMouseListener() {
-		tabs.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				tabs.mouseClickPosn = e.getX();
-				tabs.returnTimer.start();
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				tabs.pressedTab     = tabs.tabs.get(e.getX(), e.getY());
-				tabs.mouseClickPosn = e.getX() - tabs.pressedTab.x;
-
-				tabs.tabs.setSelectedIndex(tabs.pressedTab);
-
-				switchJComponentInView(tabs.pressedTab);
-				
-				repaint();
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {				
-				if (tabs.tabs.selected.determineXClickPosn().contains(e.getPoint())) {
-					//TODO Make the tab closing functionality.
-				}
-			}
-		});
-	}
-	
-	
-
-	public void addMouseMotionListener() {
-		tabs.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseMoved(MouseEvent arg0) {
-				if(tabs.tabs.selected != null) {
-					if(tabs.tabs.selected.determineXClickPosn().contains(arg0.getPoint())) {
-						xColor = FancyColor.DARK_RED;
-					} else {
-						xColor = FancyColor.DARK_GRAY;
-					}
-					
-					repaint();
-				}
-			}
-			
-			@Override
-			public void mouseDragged(MouseEvent arg0) {
-				tabs.pressedTab.x = arg0.getX() - tabs.mouseClickPosn;
-
-				try {					
-					FancyTab2 rightTab = tabs.tabs.getRightTab(tabs.pressedTab);
-
-					if(tabs.pressedTab.x + (tabs.pressedTab.width/2) > rightTab.x) {
-						tabs.swappedTab = rightTab;
-						tabs.swapRightTimer.start();
-					}
-				} catch (NoSuchElementException e) {}
-
-				try {
-					FancyTab2 leftTab = tabs.tabs.getLeftTab(tabs.pressedTab);
-
-					if((tabs.pressedTab.x < leftTab.x + (leftTab.width/2))
-							&& (tabs.pressedTab.x > leftTab.x)) {
-						tabs.swappedTab = leftTab;
-						tabs.swapLeftTimer.start();
-					}
-
-				} catch (NoSuchElementException e) {}
-
-				revalidate();
-				repaint();
-			}
-		});
-	}
-
 	/**
 	 * This is where all of the tab magic happens.
 	 * @author Alexander Porrello
 	 */
-	public class FancyTabOrganizer extends FancyPanel {
+	private class FancyTabOrganizer extends FancyPanel {
 		private static final long serialVersionUID = 1L;
 
 		FancyTabContainer tabs = new FancyTabContainer();
@@ -162,23 +93,18 @@ public class FancyTabPanelV2 extends FancyPanel {
 		FancyTab2 pressedTab;
 		FancyTab2 swappedTab;
 
-		Boolean swappedRight = false;
-		Boolean swappedLeft  = false;
-
 		Font tabFont;
-		
+
 		public FancyTabOrganizer() {
 			setPreferredSize(new Dimension(500, tabHeight + 5));
 
 			Font a = new JButton().getFont();
 			tabFont = new Font(a.getName(), a.getStyle(), 12);
-			
+
 			makeSwapTimers();
 			makeReturnTimer();
-		}
-
-		public void addTab(String title, JComponent component) {
-			tabs.add(new FancyTab2(title, tabWidth, tabHeight, tabs.size(), component));
+			addMouseListener();
+			addMouseMotionListener();
 		}
 
 		/**
@@ -208,9 +134,7 @@ public class FancyTabPanelV2 extends FancyPanel {
 		public void makeSwapTimers() {
 			swapRightTimer = new Timer(0, new ActionListener() {
 				@Override
-				public void actionPerformed(ActionEvent ae) {
-					swappedRight = true;
-					
+				public void actionPerformed(ActionEvent ae) {					
 					if(swappedTab.x > pressedTab.determineXPosition()) {
 						swappedTab.x = swappedTab.x - 1;
 						repaint();
@@ -223,9 +147,7 @@ public class FancyTabPanelV2 extends FancyPanel {
 
 			swapLeftTimer = new Timer(0, new ActionListener() {
 				@Override
-				public void actionPerformed(ActionEvent ae) {
-					swappedLeft = true;
-										
+				public void actionPerformed(ActionEvent ae) {										
 					if(swappedTab.x < pressedTab.determineXPosition()) {
 						swappedTab.x = swappedTab.x + 1;
 						repaint();
@@ -233,6 +155,73 @@ public class FancyTabPanelV2 extends FancyPanel {
 						swapTabIndices(pressedTab, swappedTab);
 						swapLeftTimer.stop();
 					}
+				}
+			});
+		}
+
+		public void addMouseListener() {
+			addMouseListener(new MouseAdapter() {
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					mouseClickPosn = e.getX();
+					returnTimer.start();
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					pressedTab     = tabs.get(e.getX(), e.getY());
+					mouseClickPosn = e.getX() - pressedTab.x;
+
+					tabs.setSelectedIndex(pressedTab);
+					switchJComponentInView(pressedTab);
+
+					repaint();
+				}
+			});
+		}
+
+		public void addMouseMotionListener() {
+			addMouseMotionListener(new MouseMotionAdapter() {
+				@Override
+				public void mouseMoved(MouseEvent arg0) {
+					if(tabs.selected != null) {
+						if(tabs.selected.determineXClickPosn().contains(arg0.getPoint())) {
+							xColor = FancyColor.DARK_RED;
+						} else {
+							xColor = FancyColor.DARK_GRAY;
+						}
+
+						repaint();
+					}
+				}
+
+				@Override
+				public void mouseDragged(MouseEvent arg0) {
+					pressedTab.x = arg0.getX() - mouseClickPosn;
+
+					try {					
+						FancyTab2 rightTab = tabs.getRightTab(pressedTab);
+
+						if(pressedTab.x + (pressedTab.width/2) > rightTab.x) {
+							swappedTab = rightTab;
+							swapRightTimer.start();
+						}
+					} catch (NoSuchElementException e) {}
+
+					try {
+						FancyTab2 leftTab = tabs.getLeftTab(pressedTab);
+
+						if((pressedTab.x < leftTab.x + (leftTab.width/2))
+								&& (pressedTab.x > leftTab.x)) {
+							swappedTab = leftTab;
+							swapLeftTimer.start();
+						}
+
+					} catch (NoSuchElementException e) {}
+
+					revalidate();
+					repaint();
 				}
 			});
 		}
@@ -249,7 +238,7 @@ public class FancyTabPanelV2 extends FancyPanel {
 			a.index = indexB;
 			b.index = indexA;
 		}
-		
+
 		@Override
 		public void paintComponent(Graphics g) {
 			Graphics2D gg = (Graphics2D) g;
@@ -277,7 +266,7 @@ public class FancyTabPanelV2 extends FancyPanel {
 				gg.setColor(Color.BLACK);
 				gg.drawString(tabs.selected.text, tabs.selected.x + 6, 
 						tabs.selected.y + tabHeight-8);
-				
+
 				//Draw out the "X"
 				gg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
 						RenderingHints.VALUE_ANTIALIAS_ON);
@@ -289,6 +278,76 @@ public class FancyTabPanelV2 extends FancyPanel {
 				gg.drawLine(r.x, r.height, r.x+r.width, r.y);
 			}
 		}
+
+		public void addTab(String title, JComponent component, Consumer<MouseEvent> listener) {
+			FancyTab2 toAdd = new FancyTab2(title, tabWidth, tabHeight, tabs.size(), component);
+			tabs.add(toAdd);
+
+			addMouseListener(new MouseAdapter() {								
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if(toAdd.determineXClickPosn().contains(e.getPoint())) {
+						listener.accept(e);
+					}
+				}
+			});
+		}
+
+		public void removeTab(String tabTitle) {
+			try {
+				FancyTab2 ft = tabs.get(tabTitle);
+
+				if(tabs.size() > 1) {
+					if(ft.index == 0) {
+						tabs.setSelectedIndex(tabs.getRightTab(ft));
+						switchJComponentInView(tabs.getRightTab(ft));
+					} else {
+						tabs.setSelectedIndex(tabs.getLeftTab(ft));
+						switchJComponentInView(tabs.getLeftTab(ft));
+					}
+				}
+
+				tabs.remove(ft);
+				
+				for(FancyTab2 tab : tabs) {
+					new RemoveTimer(tab);
+				}
+				
+				repaint();
+			} catch(NoSuchElementException nsee) {
+				System.out.println("No such element found!");
+			}
+		}
+		
+		public class RemoveTimer {
+			
+			Timer removeTimer;
+			
+			public RemoveTimer(FancyTab2 tab) {
+				removeTimer = new Timer(0, new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent ae) {
+						if(tab.x > tab.determineXPosition()) {
+							tab.x = tab.x - 1;
+							repaint();
+						} else if(tab.x < tab.determineXPosition()) {
+							tab.x = tab.x + 1;
+							repaint();
+						} else {
+							removeTimer.stop();
+						}
+					}
+				});
+				
+				removeTimer.start();
+			}
+		}
+	}
+
+	public static FancyPanel test(Color color) {
+		FancyPanel fp = new FancyPanel();
+		fp.setBackground(color);
+		return fp;
 	}
 
 	public static void main(String[] args) {
@@ -296,7 +355,20 @@ public class FancyTabPanelV2 extends FancyPanel {
 		frame.setDefaultCloseOperation(FancyFrame.EXIT_ON_CLOSE);
 		frame.setLocationByPlatform(true);
 		frame.setSize(new Dimension(400, 50));
-		frame.add(new FancyTabPanelV2());
+
+		FancyTabPanelV2 ftpv2 = new FancyTabPanelV2();
+
+		ftpv2.addTab("Testing", test(Color.RED), e -> {
+			ftpv2.removeTab("Testing");
+		});
+		ftpv2.addTab("Testing 2", test(Color.BLUE), e -> {
+			ftpv2.removeTab("Testing 2");
+		});
+		ftpv2.addTab("Testing 3", test(Color.ORANGE), e -> {
+			ftpv2.removeTab("Testing 3");
+		});
+
+		frame.add(ftpv2);
 		frame.pack();
 
 		frame.setVisible(true);

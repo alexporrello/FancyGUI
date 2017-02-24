@@ -22,6 +22,36 @@ public class FancyTabContainer extends ArrayList<FancyTab2> {
 	}
 	
 	/**
+	 * Removes a FancyTab and sets all the indecees correct.
+	 * @param tab
+	 */
+	public void remove(FancyTab2 tab) {
+		
+		for(FancyTab2 t : this) {
+			if(t.index > tab.index) {
+				t.index = t.index-1;
+			}
+		}
+		
+		super.remove(tab);
+	}
+	
+	/**
+	 * Returns a tab given its name.
+	 * @param name is the tab's name
+	 * @return the tab belonging to the name
+	 */
+	public FancyTab2 get(String name) {
+		for(FancyTab2 ft : this) {
+			if(ft.text.equals(name)) {
+				return ft;
+			}
+		}
+
+		throw new NoSuchElementException();
+	}
+	
+	/**
 	 * Returns a tab if it has been clicked on.
 	 * @param x the x posn of the cursor
 	 * @param y the y posn of the cursor
