@@ -22,13 +22,12 @@ import javax.swing.JComponent;
 import javax.swing.Timer;
 
 import colors.FancyColor;
-import displays.FancyFrame;
 import displays.FancyPanel;
 
 public class FancyTabPanelV2 extends FancyPanel {
 	private static final long serialVersionUID = 3467583173655155282L;
 
-	private FancyTabOrganizer tabs = new FancyTabOrganizer();
+	private FancyTabOrganizer tabOrganizer = new FancyTabOrganizer();
 
 	private JComponent inView = new FancyPanel();
 
@@ -37,8 +36,20 @@ public class FancyTabPanelV2 extends FancyPanel {
 	public FancyTabPanelV2() {	
 		setLayout(new BorderLayout());
 
-		add(tabs, BorderLayout.NORTH);
+		add(tabOrganizer, BorderLayout.NORTH);
 		add(inView, BorderLayout.CENTER);
+	}
+	
+	/**
+	 * Returns selected component in {@link #tabOrganizer}.
+	 * @return
+	 */
+	public JComponent selectedComponent() {
+		return getSelectedTab().content;
+	}
+
+	public FancyTab2 getSelectedTab() {
+		return tabOrganizer.tabs.selected;
 	}
 
 	/**
@@ -48,7 +59,7 @@ public class FancyTabPanelV2 extends FancyPanel {
 	 * @param closeListener the action taken when the close is pressed
 	 */
 	public void addTab(String title, JComponent component, Consumer<MouseEvent> closeListener) {
-		tabs.addTab(title, component, closeListener);
+		tabOrganizer.addTab(title, component, closeListener);
 	}
 
 	/**
@@ -56,7 +67,7 @@ public class FancyTabPanelV2 extends FancyPanel {
 	 * @param tab the tab to be removed
 	 */
 	public void removeTab(String tabTitle) {
-		tabs.removeTab(tabTitle);
+		tabOrganizer.removeTab(tabTitle);
 	}
 
 	/**
@@ -170,13 +181,15 @@ public class FancyTabPanelV2 extends FancyPanel {
 
 				@Override
 				public void mousePressed(MouseEvent e) {
-					pressedTab     = tabs.get(e.getX(), e.getY());
-					mouseClickPosn = e.getX() - pressedTab.x;
+					try {
+						pressedTab     = tabs.get(e.getX(), e.getY());
+						mouseClickPosn = e.getX() - pressedTab.x;
 
-					tabs.setSelectedIndex(pressedTab);
-					switchJComponentInView(pressedTab);
+						tabs.setSelectedIndex(pressedTab);
+						switchJComponentInView(pressedTab);
 
-					repaint();
+						repaint();
+					} catch (NoSuchElementException f) {}
 				}
 			});
 		}
@@ -245,6 +258,8 @@ public class FancyTabPanelV2 extends FancyPanel {
 			gg.setFont(tabFont);
 			gg.setRenderingHint(RenderingHints.KEY_RENDERING,
 					RenderingHints.VALUE_RENDER_QUALITY);
+			gg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+					RenderingHints.VALUE_ANTIALIAS_ON);
 
 			gg.setColor(Color.LIGHT_GRAY);
 			gg.fillRect(0, 0, getWidth(), getHeight());
@@ -253,7 +268,7 @@ public class FancyTabPanelV2 extends FancyPanel {
 				gg.setColor(Color.LIGHT_GRAY);
 				gg.fillRect(tab.x, tab.y, tabWidth, tabHeight);
 				gg.setColor(Color.BLACK);
-				gg.drawString(tab.text, tab.x + 6, tab.y + tabHeight-8);
+				gg.drawString(tab.drawText, tab.x + 6, tab.y + tabHeight-8);
 			}
 
 			gg.setColor(Color.decode("#F0F0F0"));
@@ -264,12 +279,12 @@ public class FancyTabPanelV2 extends FancyPanel {
 				gg.fillRect(tabs.selected.x, tabs.selected.y, tabWidth,
 						tabHeight);
 				gg.setColor(Color.BLACK);
-				gg.drawString(tabs.selected.text, tabs.selected.x + 6, 
+				gg.drawString(tabs.selected.drawText, tabs.selected.x + 6, 
 						tabs.selected.y + tabHeight-8);
 
 				//Draw out the "X"
-				gg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-						RenderingHints.VALUE_ANTIALIAS_ON);
+				//				gg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+				//						RenderingHints.VALUE_ANTIALIAS_ON);
 				Rectangle r = tabs.selected.determineXClickPosn();
 				gg.setColor(xColor);
 				gg.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, 
@@ -280,8 +295,11 @@ public class FancyTabPanelV2 extends FancyPanel {
 		}
 
 		public void addTab(String title, JComponent component, Consumer<MouseEvent> listener) {
-			FancyTab2 toAdd = new FancyTab2(title, tabWidth, tabHeight, tabs.size(), component);
+			FancyTab2 toAdd = new FancyTab2(title, tabWidth, tabHeight, tabs.size(), tabFont, component);
 			tabs.add(toAdd);
+			tabs.setSelectedIndex(toAdd); 
+
+			switchJComponentInView(toAdd);
 
 			addMouseListener(new MouseAdapter() {								
 				@Override
@@ -291,6 +309,8 @@ public class FancyTabPanelV2 extends FancyPanel {
 					}
 				}
 			});
+
+			repaint();
 		}
 
 		public void removeTab(String tabTitle) {
@@ -299,30 +319,32 @@ public class FancyTabPanelV2 extends FancyPanel {
 
 				if(tabs.size() > 1) {
 					if(ft.index == 0) {
-						tabs.setSelectedIndex(tabs.getRightTab(ft));
-						switchJComponentInView(tabs.getRightTab(ft));
+						try {
+							tabs.setSelectedIndex(tabs.getRightTab(ft));
+							switchJComponentInView(tabs.getRightTab(ft));
+						} catch (NoSuchElementException e) {}
 					} else {
-						tabs.setSelectedIndex(tabs.getLeftTab(ft));
-						switchJComponentInView(tabs.getLeftTab(ft));
+						try {
+							tabs.setSelectedIndex(tabs.getLeftTab(ft));
+							switchJComponentInView(tabs.getLeftTab(ft));
+						} catch (NoSuchElementException e) {}
 					}
 				}
 
 				tabs.remove(ft);
-				
+
 				for(FancyTab2 tab : tabs) {
 					new RemoveTimer(tab);
 				}
-				
+
 				repaint();
-			} catch(NoSuchElementException nsee) {
-				System.out.println("No such element found!");
-			}
+			} catch (NoSuchElementException e) {}
 		}
-		
+
 		public class RemoveTimer {
-			
+
 			Timer removeTimer;
-			
+
 			public RemoveTimer(FancyTab2 tab) {
 				removeTimer = new Timer(0, new ActionListener() {
 					@Override
@@ -338,39 +360,39 @@ public class FancyTabPanelV2 extends FancyPanel {
 						}
 					}
 				});
-				
+
 				removeTimer.start();
 			}
 		}
 	}
 
-	public static FancyPanel test(Color color) {
-		FancyPanel fp = new FancyPanel();
-		fp.setBackground(color);
-		return fp;
-	}
-
-	public static void main(String[] args) {
-		FancyFrame frame = new FancyFrame();
-		frame.setDefaultCloseOperation(FancyFrame.EXIT_ON_CLOSE);
-		frame.setLocationByPlatform(true);
-		frame.setSize(new Dimension(400, 50));
-
-		FancyTabPanelV2 ftpv2 = new FancyTabPanelV2();
-
-		ftpv2.addTab("Testing", test(Color.RED), e -> {
-			ftpv2.removeTab("Testing");
-		});
-		ftpv2.addTab("Testing 2", test(Color.BLUE), e -> {
-			ftpv2.removeTab("Testing 2");
-		});
-		ftpv2.addTab("Testing 3", test(Color.ORANGE), e -> {
-			ftpv2.removeTab("Testing 3");
-		});
-
-		frame.add(ftpv2);
-		frame.pack();
-
-		frame.setVisible(true);
-	}
+	//	public static FancyPanel test(Color color) {
+	//		FancyPanel fp = new FancyPanel();
+	//		fp.setBackground(color);
+	//		return fp;
+	//	}
+	//
+	//	public static void main(String[] args) {
+	//		FancyFrame frame = new FancyFrame();
+	//		frame.setDefaultCloseOperation(FancyFrame.EXIT_ON_CLOSE);
+	//		frame.setLocationByPlatform(true);
+	//		frame.setSize(new Dimension(400, 50));
+	//
+	//		FancyTabPanelV2 ftpv2 = new FancyTabPanelV2();
+	//
+	//		ftpv2.addTab("Testing", test(Color.RED), e -> {
+	//			ftpv2.removeTab("Testing");
+	//		});
+	//		ftpv2.addTab("Testing 2", test(Color.BLUE), e -> {
+	//			ftpv2.removeTab("Testing 2");
+	//		});
+	//		ftpv2.addTab("Testing 3", test(Color.ORANGE), e -> {
+	//			ftpv2.removeTab("Testing 3");
+	//		});
+	//
+	//		frame.add(ftpv2);
+	//		frame.pack();
+	//
+	//		frame.setVisible(true);
+	//	}
 }

@@ -1,5 +1,6 @@
 package tabs;
 
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -7,10 +8,14 @@ import java.util.function.Consumer;
 
 import javax.swing.JComponent;
 
+import text.Word;
+
 public class FancyTab2 {
 
 	public String text;
 
+	public String drawText;
+	
 	public int x;
 	public int y;
 	public int width;
@@ -25,7 +30,7 @@ public class FancyTab2 {
 	public Consumer<MouseEvent> listener;
 	
 	public FancyTab2(String title, int width, int height, 
-			int posn, JComponent content) {
+			int posn, Font theFont, JComponent content) {
 		this.text       = title;
 		this.width      = width;
 		this.height     = height;
@@ -34,19 +39,20 @@ public class FancyTab2 {
 		this.y          = 0;
 		this.x          = determineXPosition();
 		this.xClickPosn = determineXClickPosn();
+		
+		setDrawString(theFont);
 	}
 	
-	public FancyTab2(String title, int width, int height, 
-			int posn, JComponent content, Consumer<MouseEvent> listener) {
-		this.text       = title;
-		this.width      = width;
-		this.height     = height;
-		this.content    = content;
-		this.index      = posn;
-		this.y          = 0;
-		this.x          = determineXPosition();
-		this.xClickPosn = determineXClickPosn();
-		this.listener   = listener;
+	private void setDrawString(Font font) {
+		Word word = new Word(text, font);
+		
+		int sub = 0;
+		
+		while(word.width > (width / 4) * 3) {
+			word = new Word(text.substring(0, text.length() + -sub++) + "...", font);
+		}
+		
+		drawText = word.word;
 	}
 	
 	public int determineXPosition() {
