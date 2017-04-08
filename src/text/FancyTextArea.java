@@ -8,9 +8,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextArea;
 
 import spellCheck.FancySpellCheck;
@@ -36,8 +38,6 @@ public class FancyTextArea extends JTextArea {
 		setTextArea();
 	}
 	
-	
-	
 	/**
 	 * Sets the font, the foreground color, and the border. <br>
 	 * Sets word wrap and line wrap to true.
@@ -59,6 +59,19 @@ public class FancyTextArea extends JTextArea {
 	public void disableSpellCheck() {
 		if(fancySpellCheck != null) {
 			fancySpellCheck.enableSpellCheck(false);
+		}
+	}
+	
+	/**
+	 * Returns the JPopupMenu if fancySpellCheck has been enabled; otherwise 
+	 * throws an exception.
+	 * @return the JPopupMenu for the fancySpellChecker.
+	 */
+	public JPopupMenu getJPopupMenu() {
+		if(fancySpellCheck != null) {
+			return fancySpellCheck.menu;
+		} else {
+			throw new NoSuchElementException();
 		}
 	}
 	

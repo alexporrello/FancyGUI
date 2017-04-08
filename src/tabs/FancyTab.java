@@ -1,157 +1,80 @@
 package tabs;
 
-import icons.FancyIcon;
-
-import java.awt.Color;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 import javax.swing.JComponent;
-import javax.swing.SwingConstants;
 
-import layout.GBC;
-import text.FancyLabel;
-import clickables.FancyButton;
-import colors.FancyColor;
-import colors.HoverColor;
-import displays.FancyComponentUtils;
-import displays.FancyPanel;
+import text.Word;
 
-public class FancyTab extends FancyPanel implements Cloneable {
-	private static final long serialVersionUID = -7726386930856586263L;
+public class FancyTab {
 
-	public static final Color mouseOff  = FancyColor.decode("#CCCCCC");
-	public static final Color mouseOver = FancyColor.decode("#E6E6E6");
-	public static final Color selected  = FancyColor.decode("#F2F2F2");
+	public String name;
 
-	public FancyLabel title;
-
-	private FancyButton close = new FancyButton(FancyIcon.EMPTY);
-
-	boolean isSelected = false;
-
-	public JComponent component;
-
-	public int drawingOffset = 0;
+	public String drawText;
 	
-	public FancyTab(String name, JComponent component) {
-		this.component = component;
+	public int x;
+	public int y;
+	public int width;
+	public int height;
 
-		setLayout(new GridBagLayout());
-		setBackground(mouseOff);
+	public Rectangle xClickPosn;
+	
+	public JComponent content;
 
-		setupTitleLabel(name);
-		setupCloseButton();
+	public int index;
 
-		makeTab();		
-	}
-
-	/**
-	 * Sets up the label that displays the tab's name.
-	 * @param name the tab's given name.
-	 */
-	private void setupTitleLabel(String name) {
-		title = new FancyLabel(name);
-		title.setOpaque(false);
-		title.setHorizontalAlignment(SwingConstants.LEFT);
-		FancyComponentUtils.setFixedSize(title, 120, 25);
-	}
-
-	/**
-	 * Sets up the close button. <br>
-	 * <b>NOTE:</b> This method will not close out the tab. The close action
-	 * must be defined in the program.
-	 */
-	private void setupCloseButton() {
-		FancyComponentUtils.setFixedSize(close, 25, 15);
-		close.setColor(new HoverColor(mouseOff, mouseOff));
-		close.setOpaque(false);
-		close.setFocusable(true);
-		close.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				if(!isSelected) {
-					setBackground(mouseOver);
-					close.setIcon(FancyIcon.DELETE_BLACK_16x16);
-					close.setColor(new HoverColor(mouseOver, mouseOver));
-				} else {
-					close.setIcon(FancyIcon.DELETE_RED);
-				}
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				if(!isSelected) {
-					setBackground(mouseOff);
-					close.setColor(new HoverColor(mouseOff, mouseOff));
-					close.setIcon(FancyIcon.EMPTY);
-				} else {
-					close.setIcon(FancyIcon.DELETE_BLACK_16x16);
-				}
-			}
-		});
-	}
-
-	/**
-	 * Sets up the tab.
-	 */
-	private void makeTab() {
-		int x = 0;
-
-		GBC.addWithGBC(this, title, 1.0, 0.0, x++, 0, 
-				GBC.VERT, GBC.FIRST_LINE_START, GBC.insets(2, 0, 2, 0), 1);	
-		GBC.addWithGBC(this, close, 0.0, 0.0, x++, 0, 
-				GBC.VERT, GBC.EAST, GBC.insets(2, 0, 2, 0), 1);	
-	}
-
-	public void setMouseOverColor(Boolean hovered) {
-		if(hovered) {
-			setBackground(FancyTab.mouseOver);
-			close.setColor(new HoverColor(FancyTab.mouseOver, FancyTab.mouseOver));
-			close.setIcon(FancyIcon.DELETE_BLACK_16x16);
-		} else {
-			setBackground(FancyTab.mouseOff);
-			close.setColor(new HoverColor(FancyTab.mouseOff, FancyTab.mouseOff));
-			close.setIcon(FancyIcon.EMPTY);
-		}
-	}
-
-	/**
-	 * Used to add an ActionEvent to the close button.
-	 * @param listener is the ActionEvent to be added.
-	 */
-	public void addActionToCloseButton(Consumer<ActionEvent> listener) {
-		close.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				listener.accept(e);
-			}
-		});
-	}
-
-	public void setSelected(Boolean selected) {
-		this.isSelected = selected;
-
-		if(selected) {
-			setBackground(FancyTab.selected);
-			close.setColor(new HoverColor(FancyTab.selected, FancyTab.selected));
-			close.setIcon(FancyIcon.DELETE_BLACK_16x16);
-		} else {
-			setBackground(mouseOff);
-			close.setColor(new HoverColor(mouseOff, mouseOff));
-			close.setIcon(FancyIcon.EMPTY);
-		}
-
-		revalidate();
-		repaint();
+	public Consumer<MouseEvent> listener;
+	
+	public FancyTab(String title, int width, int height, 
+			int posn, Font theFont, JComponent content) {
+		this.name       = title;
+		this.width      = width;
+		this.height     = height;
+		this.content    = content;
+		this.index      = posn;
+		this.y          = 0;
+		this.x          = determineXPosition();
+		this.xClickPosn = determineXClickPosn();
+		
+		setDrawString(theFont);
 	}
 	
-	@Override
-	public FancyTab clone() {
-		return this;
+	private void setDrawString(Font font) {
+		Word word = new Word(name, font);
+		
+		int sub = 0;
+		
+		while(word.width > (width / 4) * 3) {
+			word = new Word(name.substring(0, name.length() + -sub++) + "...", font);
+		}
+		
+		drawText = word.word;
+	}
+	
+	public int determineXPosition() {
+		return (index * width) + index;
+	}
+	
+	public Rectangle determineXClickPosn() {
+		int leftX  = x + ((width/7)*6);
+		int leftY  = 7;
+		int width  = this.width/15;
+		int height = this.height-(this.height/3);
+		
+		return new Rectangle(leftX, leftY, width, height);
+	}
+
+	/**
+	 * Checks if a given point is contained within this tab.
+	 * @param p the point to check.
+	 * @return true if the tab contains the point; else, false
+	 */
+	public boolean contains(Point p) {
+		return new Rectangle(x, y, width, height).contains(
+				new Point(p.x, p.y));
 	}
 }
