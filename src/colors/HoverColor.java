@@ -3,10 +3,10 @@ package colors;
 import java.awt.Color;
 import java.io.Serializable;
 
-import clickables.FancyButton;
+import clickables.JMButton;
 
 /**
- * Contains a dark and a light color for classes such as {@link FancyButton}
+ * Contains a dark and a light color for classes such as {@link JMButton}
  * that require two different colors: one for the button's normal state 
  * and another for the button when it is hovered over.
  * 
@@ -15,11 +15,11 @@ import clickables.FancyButton;
 public class HoverColor implements Serializable {
 	private static final long serialVersionUID = 7293875703408040205L;
 	
-	public static HoverColor GREEN  = new HoverColor(FancyColor.DARK_GREEN, FancyColor.LIGHT_GREEN);
-	public static HoverColor BLUE   = new HoverColor(FancyColor.DARK_BLUE, FancyColor.LIGHT_BLUE);
-	public static HoverColor RED    = new HoverColor(FancyColor.DARK_RED, FancyColor.LIGHT_RED);
-	public static HoverColor ORANGE = new HoverColor(FancyColor.DARK_ORANGE, FancyColor.LIGHT_ORANGE);
-	public static HoverColor GREY   = new HoverColor(FancyColor.DARK_GRAY, FancyColor.LIGHT_GRAY);
+	public static HoverColor GREEN  = new HoverColor(JMColor.DARK_GREEN, JMColor.LIGHT_GREEN);
+	public static HoverColor BLUE   = new HoverColor(JMColor.DARK_BLUE, JMColor.LIGHT_BLUE);
+	public static HoverColor RED    = new HoverColor(JMColor.DARK_RED, JMColor.LIGHT_RED);
+	public static HoverColor ORANGE = new HoverColor(JMColor.DARK_ORANGE, JMColor.LIGHT_ORANGE);
+	public static HoverColor GREY   = new HoverColor(JMColor.DARK_GRAY, JMColor.LIGHT_GRAY);
 	
 	public Color light;
 	public Color dark;

@@ -4,10 +4,10 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-public class FancyFrame extends JFrame {
+public class JMFrame extends JFrame {
 	private static final long serialVersionUID = -1028890050573574197L;
 
-	public FancyFrame() {
+	public JMFrame() {
 		setLookAndFeel();
 	}
 	

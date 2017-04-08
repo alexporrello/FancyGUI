@@ -17,11 +17,11 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
-import clickables.FancyButton;
-import colors.FancyColor;
+import clickables.JMButton;
+import colors.JMColor;
 import colors.HoverColor;
 
-public class FancyScrollPane extends JScrollPane {
+public class JMScrollPane extends JScrollPane {
 	private static final long serialVersionUID = -5458523733486110315L;
 
 	public static final int HORIZ_SCROLL_NEVER = JScrollPane.HORIZONTAL_SCROLLBAR_NEVER;
@@ -29,24 +29,24 @@ public class FancyScrollPane extends JScrollPane {
 
 	private Boolean showButtons = true;
 
-	private Color mouse_pressed = FancyColor.decode("#606060");
-	private Color mouse_over    = FancyColor.decode("#a6a6a6");
-	private Color mouse_off     = FancyColor.decode("#cdcdcd");
+	private Color mouse_pressed = JMColor.decode("#606060");
+	private Color mouse_over    = JMColor.decode("#a6a6a6");
+	private Color mouse_off     = JMColor.decode("#cdcdcd");
 
-	private Color scrollThumbColor = FancyColor.decode("#e2e2e2");
-	private Color scrollBackground = FancyColor.decode("#f0f0f0");
+	private Color scrollThumbColor = JMColor.decode("#e2e2e2");
+	private Color scrollBackground = JMColor.decode("#f0f0f0");
 
 	private Boolean mousePressed = false;
 
 	private int drawWidth = 3;
 
-	public FancyScrollPane(JComponent c) {
+	public JMScrollPane(JComponent c) {
 		super(c);
 
 		setUpPanel();
 	}
 
-	public FancyScrollPane(JComponent c, Boolean showButtons) {
+	public JMScrollPane(JComponent c, Boolean showButtons) {
 		super(c);
 
 		this.showButtons = showButtons;
@@ -54,7 +54,7 @@ public class FancyScrollPane extends JScrollPane {
 		setUpPanel();
 	}
 
-	public FancyScrollPane(JComponent c, Boolean showButtons, 
+	public JMScrollPane(JComponent c, Boolean showButtons, 
 			Color scrollDisplayColor, Color scrollBackground) {
 		super(c);
 
@@ -288,8 +288,8 @@ public class FancyScrollPane extends JScrollPane {
 		return cond1 && cond2 && cond3 && cond4;
 	}
 
-	private FancyButton makeScrollButton(ImageIcon icon) {
-		FancyButton button = new FancyButton(icon);
+	private JMButton makeScrollButton(ImageIcon icon) {
+		JMButton button = new JMButton(icon);
 		button.setColor(new HoverColor(scrollThumbColor, scrollBackground));
 		button.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
 		button.setPreferredSize(new Dimension(17, 17));

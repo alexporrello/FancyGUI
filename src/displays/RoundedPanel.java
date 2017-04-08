@@ -7,15 +7,15 @@ import java.awt.Graphics2D;
 import javax.swing.JComponent;
 
 import layout.GBC;
-import colors.FancyColor;
+import colors.JMColor;
 
-public class RoundedPanel extends FancyPanel {
+public class RoundedPanel extends JMPanel {
 	private static final long serialVersionUID = -6924681512516854970L;
 
-	public Color border     = FancyColor.DARKER_GRAY;
-	public Color background = FancyColor.DARK_GRAY;
-	public Color foreground = FancyColor.LIGHT_GRAY;
-	public Color shadow     = FancyColor.DARK_GRAY;
+	public Color border     = JMColor.DARKER_GRAY;
+	public Color background = JMColor.DARK_GRAY;
+	public Color foreground = JMColor.LIGHT_GRAY;
+	public Color shadow     = JMColor.DARK_GRAY;
 
 	public Boolean topRightRounded    = false;
 	public Boolean bottomRightRounded = false;
@@ -114,11 +114,11 @@ public class RoundedPanel extends FancyPanel {
 			gg.fillRoundRect(borderW, borderW, width-(borderW*2), height-(borderW*2), arcW, arcW);
 
 			if(paintFocus) {
-				gg.setColor(FancyColor.ACCENT);
+				gg.setColor(JMColor.ACCENT);
 				gg.drawRoundRect(borderW,   borderW, width-(borderW*2), 
 						height-(borderW*2), arcW,    arcW);
 			} else {
-				gg.setColor(FancyColor.DARKER_GRAY);
+				gg.setColor(JMColor.DARKER_GRAY);
 				gg.drawRoundRect(borderW, borderW, width-(borderW*2), 
 						height-(borderW*2), arcW,    arcW);
 			}
@@ -129,7 +129,7 @@ public class RoundedPanel extends FancyPanel {
 			int lw = 1;
 
 			Color border = this.border;
-			if(paintFocus) {border = FancyColor.ACCENT;}
+			if(paintFocus) {border = JMColor.ACCENT;}
 
 			int botRightArc = arcWidth;
 			int topRightArc = arcWidth;

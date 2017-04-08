@@ -13,7 +13,7 @@ import java.awt.geom.AffineTransform;
  * A bar that can be filled as needed.
  * @author Alexander Porrello
  */
-public class StatsBar extends FancyPanel {
+public class StatsBar extends JMPanel {
 	private static final long serialVersionUID = 1L;
 
 	int current;

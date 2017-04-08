@@ -9,17 +9,17 @@ import java.util.ArrayList;
 import javax.swing.JDialog;
 
 import layout.GBC;
-import loaders.FancySpinner;
-import loaders.FancySpinner.SpinnerSize;
-import text.FancyLabel;
-import clickables.FancyButton;
+import loaders.JMSpinner;
+import loaders.JMSpinner.SpinnerSize;
+import text.JMLabel;
+import clickables.JMButton;
 import colors.HoverColor;
-import displays.FancyPanel;
+import displays.JMPanel;
 
 public class SpinnerDialog extends JDialog {
 	private static final long serialVersionUID = 6304551518964199589L;
 
-	public FancyButton cancel = new FancyButton("Cancel");
+	public JMButton cancel = new JMButton("Cancel");
 
 	private boolean showCancel = true;
 
@@ -46,11 +46,11 @@ public class SpinnerDialog extends JDialog {
 	public void makeGUI(String processTitle) {
 		cancel.setFocusable(false);
 
-		FancyPanel loading = new FancyPanel();
+		JMPanel loading = new JMPanel();
 		loading.setLayout(new GridBagLayout());
-		GBC.addWithGBC(loading, new FancyLabel(processTitle), 1.0, 1.0, 0, 0,
+		GBC.addWithGBC(loading, new JMLabel(processTitle), 1.0, 1.0, 0, 0,
 				GBC.CENTER, GBC.NORTH, GBC.insets(15, 0, 5, 0), 1);
-		GBC.addWithGBC(loading, new FancySpinner(SpinnerSize.SIZE_48x48), 1.0, 1.0, 0, 1,
+		GBC.addWithGBC(loading, new JMSpinner(SpinnerSize.SIZE_48x48), 1.0, 1.0, 0, 1,
 				GBC.CENTER, GBC.NORTH, GBC.insets(0, 115, 25, 115), 1);			
 
 		add(loading, BorderLayout.CENTER);

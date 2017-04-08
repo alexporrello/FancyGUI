@@ -13,8 +13,8 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import text.FancyFont;
-import colors.FancyColor;
+import text.JMFont;
+import colors.JMColor;
 import colors.HoverColor;
 
 /**
@@ -25,14 +25,14 @@ import colors.HoverColor;
  * 
  * @author Alexander Porrello
  */
-public class FancyButton extends JButton {
+public class JMButton extends JButton {
 	private static final long serialVersionUID = 5942922989567675303L;
 
 	/** Determines the colors of this button **/
 	private HoverColor color = HoverColor.GREY;
 	
 	/** Determines the color of the button's text **/
-	public Color font = FancyColor.WHITE;
+	public Color font = JMColor.WHITE;
 	
 	/** This is the icon to be painted on the button **/
 	public ButtonIcon icon = ButtonIcon.NOTHING;
@@ -43,7 +43,7 @@ public class FancyButton extends JButton {
 	/**
 	 * Creates a FancyButton with no set text or icon.
 	 */
-	public FancyButton() {
+	public JMButton() {
 		setButton();
 	}
 
@@ -51,7 +51,7 @@ public class FancyButton extends JButton {
 	 * Creates a FancyButton with text.
 	 * @param name is the text to be displayed on the FancyButton.
 	 */
-	public FancyButton(String text) {
+	public JMButton(String text) {
 		super(text);
 		setButton();
 	}
@@ -60,7 +60,7 @@ public class FancyButton extends JButton {
 	 * A given ButtonIcon will be painted onto the FancyButton.
 	 * @param icon is the icon to be painted.
 	 */
-	public FancyButton(ImageIcon icon) {
+	public JMButton(ImageIcon icon) {
 		super(icon);
 
 		setButton();
@@ -70,7 +70,7 @@ public class FancyButton extends JButton {
 	private void setButton() {
 		super.setContentAreaFilled(false);
 		super.setFocusPainted(false);
-		super.setFont(FancyFont.DEFAULT);
+		super.setFont(JMFont.DEFAULT);
 	}
 
 	/**

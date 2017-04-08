@@ -4,19 +4,19 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import text.FancyLabel;
-import colors.FancyColor;
+import text.JMLabel;
+import colors.JMColor;
 
-public class FancyDivider extends FancyLabel {
+public class JMDivider extends JMLabel {
 	private static final long serialVersionUID = 7182851391064996451L;
 
 	private int dividerWidth = 1;
 	
-	private Color dividerColor = FancyColor.LIGHT_GRAY;
+	private Color dividerColor = JMColor.LIGHT_GRAY;
 	
 	public Boolean fillHeight = false;
 	
-	public FancyDivider() {
+	public JMDivider() {
 		
 	}
 	

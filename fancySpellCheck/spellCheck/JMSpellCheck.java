@@ -34,7 +34,7 @@ import text.Unicode;
 import word.SpellCheckWord;
 import word.WordList;
 
-public class FancySpellCheck {
+public class JMSpellCheck {
 
 	/** The locations of all the errors in the document **/
 	private ArrayList<Error> errorLocations = new ArrayList<Error>();
@@ -62,7 +62,7 @@ public class FancySpellCheck {
 	/** The error that is currently selected **/
 	private String selectedError = "";
 
-	public FancySpellCheck(JTextComponent jText, WordList words) {
+	public JMSpellCheck(JTextComponent jText, WordList words) {
 		jText.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {

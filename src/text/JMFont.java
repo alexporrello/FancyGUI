@@ -2,7 +2,7 @@ package text;
 
 import java.awt.Font;
 
-public class FancyFont {
+public class JMFont {
 
 	public static final String ARIAL       = "Arial";
 	public static final String GEORGIA     = "Georgia";

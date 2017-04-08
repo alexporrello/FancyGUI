@@ -26,7 +26,7 @@ import java.awt.*;
 
 import javax.swing.text.*;
 
-import colors.FancyColor;
+import colors.JMColor;
 
 /**
  * @author Volker Berlin
@@ -49,7 +49,7 @@ public class RedZigZagPainter extends DefaultHighlighter.DefaultHighlightPainter
 	@Override
 	public Shape paintLayer(Graphics g, int i, int j, Shape shape, JTextComponent jtext, View view){
 		if(jtext.isEditable()){
-			g.setColor(FancyColor.LIGHT_RED);
+			g.setColor(JMColor.LIGHT_RED);
 			
 			try{
 				Shape sh = view.modelToView(i, Position.Bias.Forward, j, Position.Bias.Backward, shape);

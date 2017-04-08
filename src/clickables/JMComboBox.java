@@ -12,8 +12,8 @@ import java.util.Arrays;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-import text.FancyLabel;
-import colors.FancyColor;
+import text.JMLabel;
+import colors.JMColor;
 import colors.HoverColor;
 
 /**
@@ -25,17 +25,17 @@ import colors.HoverColor;
  *
  * @param <E> is the type of item that will be displayed in the ComboBox
  */
-public class FancyComboBox<E> extends JPanel {
+public class JMComboBox<E> extends JPanel {
 	private static final long serialVersionUID = 3408045971846568361L;
 
 	/** The button by which the user will step to the next item **/
-	private FancyButton next = new FancyButton(FancyIcon.NEXT_16x16);
+	private JMButton next = new JMButton(FancyIcon.NEXT_16x16);
 	/** The button by which the user will step to the previous item **/
-	private FancyButton last = new FancyButton(FancyIcon.LAST_16x16);
+	private JMButton last = new JMButton(FancyIcon.LAST_16x16);
 	/** The Currently selected index **/
 	private int selectedIndex = 0;
 	/** The label on which the name of the current selected item will be displayed **/
-	private FancyLabel displayLabel;
+	private JMLabel displayLabel;
 	/** The array in which all of our items will be held **/
 	private E[] array;
 	/** The number of items to be held in the array **/
@@ -47,7 +47,7 @@ public class FancyComboBox<E> extends JPanel {
 	 * To be used if you have an array of items for the user to select from.
 	 * @param array is the array of items that will be displayed to the user.
 	 */
-	public FancyComboBox(E[] array) {
+	public JMComboBox(E[] array) {
 		this.array = array;
 		numItems   = this.array.length;
 		
@@ -55,7 +55,7 @@ public class FancyComboBox<E> extends JPanel {
 
 		makeButtons();
 
-		displayLabel = new FancyLabel(this.array[selectedIndex] + "");
+		displayLabel = new JMLabel(this.array[selectedIndex] + "");
 		displayLabel.setForeground(labelColor);
 		add(displayLabel, BorderLayout.CENTER);
 	}
@@ -65,7 +65,7 @@ public class FancyComboBox<E> extends JPanel {
 	 * created and added to the view.
 	 */
 	private void makeButtons() {
-		setBackground(FancyColor.LIGHT_GRAY);
+		setBackground(JMColor.LIGHT_GRAY);
 		
 		next.setSize(new Dimension(30, 30));
 		next.addActionListener(new ActionListener() {
@@ -110,7 +110,7 @@ public class FancyComboBox<E> extends JPanel {
 	public void setSelectedIndex(int i) {
 		if(i >= 0 && i < numItems) {
 			remove(displayLabel);
-			displayLabel = new FancyLabel(this.array[selectedIndex] + "");
+			displayLabel = new JMLabel(this.array[selectedIndex] + "");
 			displayLabel.setForeground(labelColor);
 			add(displayLabel, BorderLayout.CENTER);
 		} else if(i > numItems){

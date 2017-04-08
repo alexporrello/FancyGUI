@@ -5,8 +5,8 @@ import java.awt.Font;
 
 import javax.swing.JCheckBox;
 
-import colors.FancyColor;
-import displays.FancyFrame;
+import colors.JMColor;
+import displays.JMFrame;
 
 /**
  * FancyCheckBox styles Java's built-in JCheckBox by 
@@ -15,16 +15,16 @@ import displays.FancyFrame;
  * 
  * @author Alexander Porrello
  */
-public class FancyCheckBox extends JCheckBox {
+public class JMCheckBox extends JCheckBox {
 	private static final long serialVersionUID = -334150206706342908L;
 	
-	public FancyCheckBox(String name, Color color) {
+	public JMCheckBox(String name, Color color) {
 		super(name);
 		super.setFont(new Font("Arial", Font.PLAIN, 15));
 		super.setForeground(color);
 	}
 	
-	public FancyCheckBox(String name, Color color, Boolean selected) {
+	public JMCheckBox(String name, Color color, Boolean selected) {
 		super(name);
 		super.setFont(new Font("Arial", Font.PLAIN, 15));
 		super.setSelected(selected);
@@ -32,9 +32,9 @@ public class FancyCheckBox extends JCheckBox {
 	}
 	
 	public static void main(String[] args) {
-		FancyFrame frame = new FancyFrame();
-		frame.setDefaultCloseOperation(FancyFrame.EXIT_ON_CLOSE);
-		frame.add(new FancyCheckBox("Dog", FancyColor.ACCENT));
+		JMFrame frame = new JMFrame();
+		frame.setDefaultCloseOperation(JMFrame.EXIT_ON_CLOSE);
+		frame.add(new JMCheckBox("Dog", JMColor.ACCENT));
 		frame.pack();
 		frame.setVisible(true);
 	}

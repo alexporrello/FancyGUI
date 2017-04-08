@@ -16,42 +16,42 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import layout.GBC;
-import text.FancyLabel;
+import text.JMLabel;
 import text.Word;
-import clickables.FancyButton;
-import colors.FancyColor;
+import clickables.JMButton;
 import colors.HoverColor;
-import displays.FancyPanel;
+import colors.JMColor;
+import displays.JMPanel;
 
 /**
  * Generic dialog.
  * @author Alexander Porrello
  */
-public class FancyDialog extends JDialog {
+public class JMDialog extends JDialog {
 	private static final long serialVersionUID = 4117907837710043293L;
 
 	/** The label that displays the message to the user **/
-	FancyLabel messageLabel = new FancyLabel();
+	JMLabel messageLabel = new JMLabel();
 
 	/** The panel upon which the buttons and message are painted **/
-	FancyPanel mainPanel = new FancyPanel();
+	JMPanel mainPanel = new JMPanel();
 
 	/** The panel that displays the confirm and cancel buttons **/
-	FancyPanel buttons = new FancyPanel();
+	JMPanel buttons = new JMPanel();
 
-	FancyButton confirmButton;
+	JMButton confirmButton;
 
-	FancyButton denyButton;
+	JMButton denyButton;
 
-	FancyButton cancelButton;
+	JMButton cancelButton;
 
 	public DialogResult result = DialogResult.NONE_SELECTED;
 	
-	private Color background = FancyColor.decode("#ffffff");
-	private Color confirm_mouse_over = FancyColor.decode("#0078d7");
-	private Color deny_mouse_over = FancyColor.DARK_RED;
-	private Color mouse_off = FancyColor.decode("#e1e1e1");
-	private Color text = FancyColor.decode("#000000");
+	private Color background = JMColor.decode("#ffffff");
+	private Color confirm_mouse_over = JMColor.decode("#0078d7");
+	private Color deny_mouse_over = JMColor.DARK_RED;
+	private Color mouse_off = JMColor.decode("#e1e1e1");
+	private Color text = JMColor.decode("#000000");
 
 	/**
 	 * This is a two option dialogue, to be used when there is a "yes" option, 
@@ -62,7 +62,7 @@ public class FancyDialog extends JDialog {
 	 * @param confirmText is the text of the "yes" option
 	 * @param confirmListener is the "yes" action
 	 */
-	public FancyDialog(String name, String message, String confirmText, 
+	public JMDialog(String name, String message, String confirmText, 
 			ActionListener confirmListener) {
 
 		createDialog(name, message);
@@ -103,7 +103,7 @@ public class FancyDialog extends JDialog {
 	 * @param confirmListener is the "yes" action
 	 * @param denyListener is the "no" action
 	 */
-	public FancyDialog(String name, String message, String confirmText, 
+	public JMDialog(String name, String message, String confirmText, 
 			String denyText, ActionListener confirmListener,
 			ActionListener denyListener) {
 
@@ -154,7 +154,7 @@ public class FancyDialog extends JDialog {
 	private void createDialog(String name, String message) {
 		setTitle(name);
 		setResizable(false);
-		setModalExclusionType(FancyDialog.ModalExclusionType.TOOLKIT_EXCLUDE);
+		setModalExclusionType(JMDialog.ModalExclusionType.TOOLKIT_EXCLUDE);
 		setModal(true);
 		setLayout(new BorderLayout());
 		Font font = getDefaultSystemFont();
@@ -175,7 +175,7 @@ public class FancyDialog extends JDialog {
 
 		/** Set up the messages label **/
 
-		messageLabel = new FancyLabel(message);
+		messageLabel = new JMLabel(message);
 		messageLabel.setFont(font);
 		messageLabel.setForeground(text);
 		messageLabel.setBorder(BorderFactory.createEmptyBorder());
@@ -185,25 +185,25 @@ public class FancyDialog extends JDialog {
 
 		Dimension buttonSize = new Dimension(80, 22);
 
-		confirmButton = new FancyButton("");
+		confirmButton = new JMButton("");
 		confirmButton.setColor(new HoverColor(confirm_mouse_over, mouse_off));
 		confirmButton.setPreferredSize(buttonSize);
 		confirmButton.setFont(font);
 
-		denyButton = new FancyButton("");
+		denyButton = new JMButton("");
 		denyButton.setColor(new HoverColor(deny_mouse_over, mouse_off));
 		denyButton.setPreferredSize(buttonSize);
 		denyButton.setFont(font);
 
-		cancelButton  = new FancyButton("Cancel");
+		cancelButton  = new JMButton("Cancel");
 		cancelButton.addActionListener(e -> dispose()); 
 		cancelButton.setColor(new HoverColor(confirm_mouse_over, mouse_off));
 		cancelButton.setPreferredSize(buttonSize);
 		cancelButton.setFont(font);
 
-		confirmButton.font = FancyColor.BLACK;
-		denyButton.font    = FancyColor.BLACK;
-		cancelButton.font  = FancyColor.BLACK;		
+		confirmButton.font = JMColor.BLACK;
+		denyButton.font    = JMColor.BLACK;
+		cancelButton.font  = JMColor.BLACK;		
 
 		buttons.setLayout(new GridBagLayout());
 		buttons.setOpaque(false);
@@ -228,7 +228,7 @@ public class FancyDialog extends JDialog {
 			e.printStackTrace();
 		}
 
-		FancyDialog text = new FancyDialog("Adobe Premier Pro CC", 
+		JMDialog text = new JMDialog("Adobe Premier Pro CC", 
 				"This project already exists. Confirm overwrite? "
 						+ "This action cannot be undone.", "Yes", "No", 
 						e -> {}, e -> {});

@@ -7,7 +7,7 @@ import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.text.JTextComponent;
 
-public class FancyTextUtils {
+public class JMTextUtils {
 
 	/**
 	 * Sets the foreground and the background color.

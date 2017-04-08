@@ -10,9 +10,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
-import displays.FancyPanel;
+import displays.JMPanel;
 
-public class FancySpinner extends FancyPanel {
+public class JMSpinner extends JMPanel {
 	private static final long serialVersionUID = 1763641511940382618L;
 
 	private int frame = 0;
@@ -21,20 +21,20 @@ public class FancySpinner extends FancyPanel {
 
 	private Image[] images = new Image[8];
 
-	public FancySpinner(SpinnerSize spinnerSize) {
+	public JMSpinner(SpinnerSize spinnerSize) {
 		this.setPreferredSize(new Dimension(spinnerSize.width, spinnerSize.height));
 		this.setSize(new Dimension(spinnerSize.width, spinnerSize.height));
 
 		size = spinnerSize.width + "x" + spinnerSize.height + ".png";
 
-		images[0] = new ImageIcon(FancySpinner.class.getClass().getResource("/01_" + size)).getImage();
-		images[1] = new ImageIcon(FancySpinner.class.getClass().getResource("/02_" + size)).getImage();
-		images[2] = new ImageIcon(FancySpinner.class.getClass().getResource("/03_" + size)).getImage();
-		images[3] = new ImageIcon(FancySpinner.class.getClass().getResource("/04_" + size)).getImage();
-		images[4] = new ImageIcon(FancySpinner.class.getClass().getResource("/05_" + size)).getImage();
-		images[5] = new ImageIcon(FancySpinner.class.getClass().getResource("/06_" + size)).getImage();
-		images[6] = new ImageIcon(FancySpinner.class.getClass().getResource("/07_" + size)).getImage();
-		images[7] = new ImageIcon(FancySpinner.class.getClass().getResource("/08_" + size)).getImage();
+		images[0] = new ImageIcon(JMSpinner.class.getClass().getResource("/01_" + size)).getImage();
+		images[1] = new ImageIcon(JMSpinner.class.getClass().getResource("/02_" + size)).getImage();
+		images[2] = new ImageIcon(JMSpinner.class.getClass().getResource("/03_" + size)).getImage();
+		images[3] = new ImageIcon(JMSpinner.class.getClass().getResource("/04_" + size)).getImage();
+		images[4] = new ImageIcon(JMSpinner.class.getClass().getResource("/05_" + size)).getImage();
+		images[5] = new ImageIcon(JMSpinner.class.getClass().getResource("/06_" + size)).getImage();
+		images[6] = new ImageIcon(JMSpinner.class.getClass().getResource("/07_" + size)).getImage();
+		images[7] = new ImageIcon(JMSpinner.class.getClass().getResource("/08_" + size)).getImage();
 
 		Timer timer = new Timer(120, this::spin);
 		timer.setInitialDelay(0);

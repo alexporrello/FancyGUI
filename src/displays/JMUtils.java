@@ -6,7 +6,7 @@ import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
-public class FancyComponentUtils {
+public class JMUtils {
 
 	/**
 	 * Sets the border: a 'padding' of 5 and then a line.

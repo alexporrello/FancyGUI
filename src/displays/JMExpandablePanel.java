@@ -12,29 +12,29 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JComponent;
 
-import text.FancyTextArea;
-import colors.FancyColor;
+import text.JMTextArea;
+import colors.JMColor;
 
-public class ExpandablePanel extends FancyPanel {
+public class JMExpandablePanel extends JMPanel {
 	private static final long serialVersionUID = 149674684797815832L;
 
 	int x = 0;
 
 	boolean move = false;
 
-	private JComponent content = new FancyPanel();
-	private FancyPanel moveClick = new FancyPanel();
+	private JComponent content = new JMPanel();
+	private JMPanel moveClick = new JMPanel();
 
 	private Anchor anchor;
 	
-	public ExpandablePanel(JComponent c, Anchor anchor) {
+	public JMExpandablePanel(JComponent c, Anchor anchor) {
 		this.anchor = anchor;
 		this.content = c;
 		
 		setUpPanel();
 	}
 
-	public ExpandablePanel(Anchor anchor) {
+	public JMExpandablePanel(Anchor anchor) {
 		this.anchor = anchor;
 		
 		setUpPanel();
@@ -66,8 +66,8 @@ public class ExpandablePanel extends FancyPanel {
 			moveClick.setPreferredSize(new Dimension(3, getHeight()));
 		}
 
-		moveClick.setBackground(FancyColor.DARK_BLUE);
-		content.setBackground(FancyColor.LIGHT_BLUE);
+		moveClick.setBackground(JMColor.DARK_BLUE);
+		content.setBackground(JMColor.LIGHT_BLUE);
 
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -193,35 +193,35 @@ public class ExpandablePanel extends FancyPanel {
 
 
 	public static void main(String[] args) {
-		FancyFrame frame = new FancyFrame();
-		frame.setDefaultCloseOperation(FancyFrame.EXIT_ON_CLOSE);
+		JMFrame frame = new JMFrame();
+		frame.setDefaultCloseOperation(JMFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 
-		ExpandablePanel ep = new ExpandablePanel(Anchor.NORTH);
+		JMExpandablePanel ep = new JMExpandablePanel(Anchor.NORTH);
 		ep.setPreferredSize(new Dimension(200, 300));
 		frame.add(ep, BorderLayout.NORTH);
 		
-		ExpandablePanel ep2 = new ExpandablePanel(Anchor.EAST);
+		JMExpandablePanel ep2 = new JMExpandablePanel(Anchor.EAST);
 		ep2.setLayout(new BorderLayout());
-		ep2.add(new FancyScrollPane(
-				new FancyTextArea("This is a test of the expandability of this thing")), 
+		ep2.add(new JMScrollPane(
+				new JMTextArea("This is a test of the expandability of this thing")), 
 				BorderLayout.CENTER);
 		ep2.setPreferredSize(new Dimension(200, 300));
 		frame.add(ep2, BorderLayout.EAST);
 		
-		ExpandablePanel ep3 = new ExpandablePanel(Anchor.SOUTH);
+		JMExpandablePanel ep3 = new JMExpandablePanel(Anchor.SOUTH);
 		ep3.setLayout(new BorderLayout());
-		ep3.add(new FancyScrollPane(
-				new FancyTextArea("This is a test of the expandability of this thing")), 
+		ep3.add(new JMScrollPane(
+				new JMTextArea("This is a test of the expandability of this thing")), 
 				BorderLayout.CENTER);
 		ep3.setPreferredSize(new Dimension(200, 300));
 		frame.add(ep3, BorderLayout.SOUTH);
 
-		ExpandablePanel ep4 = new ExpandablePanel(Anchor.WEST);
+		JMExpandablePanel ep4 = new JMExpandablePanel(Anchor.WEST);
 		ep4.setPreferredSize(new Dimension(200, 300));
 		frame.add(ep4, BorderLayout.WEST);
 		
-		FancyPanel fp = new FancyPanel();
+		JMPanel fp = new JMPanel();
 		fp.setPreferredSize(new Dimension(300, 300));
 		frame.add(fp, BorderLayout.CENTER);
 

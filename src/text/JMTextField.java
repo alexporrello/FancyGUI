@@ -12,11 +12,11 @@ import java.util.function.Consumer;
 
 import javax.swing.JTextField;
 
-import spellCheck.FancySpellCheck;
+import spellCheck.JMSpellCheck;
 import word.WordList;
-import colors.FancyColor;
+import colors.JMColor;
 
-public class FancyTextField extends JTextField {
+public class JMTextField extends JTextField {
 	private static final long serialVersionUID = -554080067019339123L;
 
 	/** If true, this form will accept only numbers; otherwise, everything. **/
@@ -26,13 +26,13 @@ public class FancyTextField extends JTextField {
 	public SmartSubstitute smartSubstitute;
 
 	/** The spell checker for this **/
-	private FancySpellCheck fancySpellCheck;
+	private JMSpellCheck fancySpellCheck;
 	
 	/**
 	 * To be used if one would like a standard JTextField with text.
 	 * @param text is this JTextField's text.
 	 */
-	public FancyTextField(String text) {
+	public JMTextField(String text) {
 		super(text);
 		setTextField();
 	}
@@ -43,8 +43,8 @@ public class FancyTextField extends JTextField {
 	 * numbers.
 	 */
 	private void setTextField() {
-		super.setFont(new Font(FancyFont.ARIAL, Font.PLAIN, 15));
-		super.setForeground(FancyColor.DARK_FONT);
+		super.setFont(new Font(JMFont.ARIAL, Font.PLAIN, 15));
+		super.setForeground(JMColor.DARK_FONT);
 		super.setMargin(new Insets(5, 5, 5, 5));
 
 		this.smartSubstitute = new SmartSubstitute(this);
@@ -73,7 +73,7 @@ public class FancyTextField extends JTextField {
 	}
 
 	public void enableSpellCheck(WordList wordlist) {
-		fancySpellCheck = new FancySpellCheck(this, wordlist);
+		fancySpellCheck = new JMSpellCheck(this, wordlist);
 	}
 	
 	public void disableSpellCheck() {

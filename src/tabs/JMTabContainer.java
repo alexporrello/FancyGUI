@@ -8,20 +8,20 @@ import java.util.NoSuchElementException;
  * Contains several useful methods to quickly access tabs.
  * @author Alexander Porrello
  */
-public class FancyTabContainer extends ArrayList<FancyTab> {
+public class JMTabContainer extends ArrayList<JMTab> {
 	private static final long serialVersionUID = -1272719320778131995L;
 
-	public FancyTab selected = null;
+	public JMTab selected = null;
 	
-	public FancyTabContainer() {
+	public JMTabContainer() {
 
 	}
 	
-	public ArrayList<FancyTab> getAllTabs() {
+	public ArrayList<JMTab> getAllTabs() {
 		return this;
 	}
 	
-	public void setSelectedIndex(FancyTab toSet) {
+	public void setSelectedIndex(JMTab toSet) {
 		selected = toSet;
 	}
 	
@@ -29,9 +29,9 @@ public class FancyTabContainer extends ArrayList<FancyTab> {
 	 * Removes a FancyTab and sets all the indecees correct.
 	 * @param tab
 	 */
-	public void remove(FancyTab tab) {
+	public void remove(JMTab tab) {
 		
-		for(FancyTab t : this) {
+		for(JMTab t : this) {
 			if(t.index > tab.index) {
 				t.index = t.index-1;
 			}
@@ -45,8 +45,8 @@ public class FancyTabContainer extends ArrayList<FancyTab> {
 	 * @param name is the tab's name
 	 * @return the tab belonging to the name
 	 */
-	public FancyTab get(String name) {
-		for(FancyTab ft : this) {
+	public JMTab get(String name) {
+		for(JMTab ft : this) {
 			if(ft.name.equals(name)) {
 				return ft;
 			}
@@ -61,8 +61,8 @@ public class FancyTabContainer extends ArrayList<FancyTab> {
 	 * @param y the y posn of the cursor
 	 * @return a tab if it has been clicked on.
 	 */
-	public FancyTab get(int x, int y) {
-		for(FancyTab ft : this) {
+	public JMTab get(int x, int y) {
+		for(JMTab ft : this) {
 			if(ft.contains(new Point(x, y))) {
 				return ft;
 			}
@@ -76,8 +76,8 @@ public class FancyTabContainer extends ArrayList<FancyTab> {
 	 * @param  posn the posn of the tab to be returned.
 	 * @return the proper posn.
 	 */
-	public FancyTab get(int posn) {
-		for(FancyTab ft : this) {
+	public JMTab get(int posn) {
+		for(JMTab ft : this) {
 			if(ft.index == posn) {
 				return ft;
 			}
@@ -91,7 +91,7 @@ public class FancyTabContainer extends ArrayList<FancyTab> {
 	 * @param ft the given tile.
 	 * @return the tile to the right of the given tile.
 	 */
-	public FancyTab getRightTab(FancyTab ft) {
+	public JMTab getRightTab(JMTab ft) {
 		if(ft.index + 1 <= this.size()) {
 			return get(ft.index + 1);
 		} else {
@@ -104,7 +104,7 @@ public class FancyTabContainer extends ArrayList<FancyTab> {
 	 * @param ft the given tile.
 	 * @return the tile to the right of the given tile.
 	 */
-	public FancyTab getLeftTab(FancyTab ft) {
+	public JMTab getLeftTab(JMTab ft) {
 		if(ft.index - 1 >= 0) {
 			return get(ft.index - 1);
 		} else {

@@ -22,20 +22,20 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.Timer;
 
-import colors.FancyColor;
-import displays.FancyFrame;
-import displays.FancyPanel;
+import colors.JMColor;
+import displays.JMFrame;
+import displays.JMPanel;
 
-public class FancyTabPanel extends FancyPanel {
+public class JMTabPanel extends JMPanel {
 	private static final long serialVersionUID = 3467583173655155282L;
 
 	private FancyTabOrganizer tabOrganizer = new FancyTabOrganizer();
 
-	private JComponent inView = new FancyPanel();
+	private JComponent inView = new JMPanel();
 
-	private Color xColor = FancyColor.DARK_GRAY;
+	private Color xColor = JMColor.DARK_GRAY;
 
-	public FancyTabPanel() {	
+	public JMTabPanel() {	
 		setLayout(new BorderLayout());
 
 		add(tabOrganizer, BorderLayout.NORTH);
@@ -50,7 +50,7 @@ public class FancyTabPanel extends FancyPanel {
 		return getSelectedTab().content;
 	}
 
-	public FancyTab getSelectedTab() {
+	public JMTab getSelectedTab() {
 		return tabOrganizer.tabs.selected;
 	}
 
@@ -77,7 +77,7 @@ public class FancyTabPanel extends FancyPanel {
 	 * Changes between the JComponent that is displayed.
 	 * @param newTab the tab whose JComponent is to be displayed
 	 */
-	private void switchJComponentInView(FancyTab newTab) {
+	private void switchJComponentInView(JMTab newTab) {
 		remove(inView);
 		inView = newTab.content;
 		add(inView, BorderLayout.CENTER);
@@ -86,7 +86,7 @@ public class FancyTabPanel extends FancyPanel {
 		repaint();
 	}
 
-	public ArrayList<FancyTab> getTabArray() {
+	public ArrayList<JMTab> getTabArray() {
 		return tabOrganizer.tabs.getAllTabs();
 	}
 	
@@ -94,10 +94,10 @@ public class FancyTabPanel extends FancyPanel {
 	 * This is where all of the tab magic happens.
 	 * @author Alexander Porrello
 	 */
-	private class FancyTabOrganizer extends FancyPanel {
+	private class FancyTabOrganizer extends JMPanel {
 		private static final long serialVersionUID = 1L;
 
-		FancyTabContainer tabs = new FancyTabContainer();
+		JMTabContainer tabs = new JMTabContainer();
 
 		public int tabHeight = 25;
 		public int tabWidth  = 150;
@@ -108,8 +108,8 @@ public class FancyTabPanel extends FancyPanel {
 		Timer swapLeftTimer;
 		Timer returnTimer;
 
-		FancyTab pressedTab;
-		FancyTab swappedTab;
+		JMTab pressedTab;
+		JMTab swappedTab;
 
 		Font tabFont;
 
@@ -207,9 +207,9 @@ public class FancyTabPanel extends FancyPanel {
 				public void mouseMoved(MouseEvent arg0) {
 					if(tabs.selected != null) {
 						if(tabs.selected.determineXClickPosn().contains(arg0.getPoint())) {
-							xColor = FancyColor.DARK_RED;
+							xColor = JMColor.DARK_RED;
 						} else {
-							xColor = FancyColor.DARK_GRAY;
+							xColor = JMColor.DARK_GRAY;
 						}
 
 						repaint();
@@ -221,7 +221,7 @@ public class FancyTabPanel extends FancyPanel {
 					pressedTab.x = arg0.getX() - mouseClickPosn;
 
 					try {					
-						FancyTab rightTab = tabs.getRightTab(pressedTab);
+						JMTab rightTab = tabs.getRightTab(pressedTab);
 
 						if(pressedTab.x + (pressedTab.width/2) > rightTab.x) {
 							swappedTab = rightTab;
@@ -230,7 +230,7 @@ public class FancyTabPanel extends FancyPanel {
 					} catch (NoSuchElementException e) {}
 
 					try {
-						FancyTab leftTab = tabs.getLeftTab(pressedTab);
+						JMTab leftTab = tabs.getLeftTab(pressedTab);
 
 						if((pressedTab.x < leftTab.x + (leftTab.width/2))
 								&& (pressedTab.x > leftTab.x)) {
@@ -251,7 +251,7 @@ public class FancyTabPanel extends FancyPanel {
 		 * @param a the first tab whose index is to be swapped
 		 * @param b the second tab whose index is to be swapped
 		 */
-		public void swapTabIndices(FancyTab a, FancyTab b) {
+		public void swapTabIndices(JMTab a, JMTab b) {
 			int indexA = a.index;
 			int indexB = b.index;
 
@@ -271,7 +271,7 @@ public class FancyTabPanel extends FancyPanel {
 			gg.setColor(Color.LIGHT_GRAY);
 			gg.fillRect(0, 0, getWidth(), getHeight());
 
-			for(FancyTab tab : tabs) {
+			for(JMTab tab : tabs) {
 				gg.setColor(Color.LIGHT_GRAY);
 				gg.fillRect(tab.x, tab.y, tabWidth, tabHeight);
 				gg.setColor(Color.BLACK);
@@ -303,7 +303,7 @@ public class FancyTabPanel extends FancyPanel {
 
 		public void addTab(String title, JComponent component,
 				Consumer<MouseEvent> listener, Consumer<MouseEvent> clickListener) {
-			FancyTab toAdd = new FancyTab(title, tabWidth, tabHeight, tabs.size(), tabFont, component);
+			JMTab toAdd = new JMTab(title, tabWidth, tabHeight, tabs.size(), tabFont, component);
 			tabs.add(toAdd);
 			tabs.setSelectedIndex(toAdd); 
 
@@ -325,7 +325,7 @@ public class FancyTabPanel extends FancyPanel {
 
 		public void removeTab(String tabTitle) {
 			try {
-				FancyTab ft = tabs.get(tabTitle);
+				JMTab ft = tabs.get(tabTitle);
 
 				if(tabs.size() > 1) {
 					if(ft.index == 0) {
@@ -343,7 +343,7 @@ public class FancyTabPanel extends FancyPanel {
 
 				tabs.remove(ft);
 
-				for(FancyTab tab : tabs) {
+				for(JMTab tab : tabs) {
 					new RemoveTimer(tab);
 				}
 
@@ -355,7 +355,7 @@ public class FancyTabPanel extends FancyPanel {
 
 			Timer removeTimer;
 
-			public RemoveTimer(FancyTab tab) {
+			public RemoveTimer(JMTab tab) {
 				removeTimer = new Timer(0, new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent ae) {
@@ -376,19 +376,19 @@ public class FancyTabPanel extends FancyPanel {
 		}
 	}
 
-	public static FancyPanel test(Color color) {
-		FancyPanel fp = new FancyPanel();
+	public static JMPanel test(Color color) {
+		JMPanel fp = new JMPanel();
 		fp.setBackground(color);
 		return fp;
 	}
 
 	public static void main(String[] args) {
-		FancyFrame frame = new FancyFrame();
-		frame.setDefaultCloseOperation(FancyFrame.EXIT_ON_CLOSE);
+		JMFrame frame = new JMFrame();
+		frame.setDefaultCloseOperation(JMFrame.EXIT_ON_CLOSE);
 		frame.setLocationByPlatform(true);
 		frame.setSize(new Dimension(400, 50));
 
-		FancyTabPanel ftpv2 = new FancyTabPanel();
+		JMTabPanel ftpv2 = new JMTabPanel();
 
 		ftpv2.addTab("Testing", test(Color.RED), e -> {
 			ftpv2.removeTab("Testing");

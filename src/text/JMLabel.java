@@ -1,5 +1,6 @@
 package text;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.FocusAdapter;
@@ -8,71 +9,95 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextArea;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
-import spellCheck.FancySpellCheck;
-import word.WordList;
-import colors.FancyColor;
-import displays.FancyFrame;
+public class JMLabel extends JLabel {
+	private static final long serialVersionUID = -4100040909900412981L;
 
-public class FancyTextArea extends JTextArea {
-	private static final long serialVersionUID = -3323550333805756766L;
-	
-	/** Responsible for smart quotes and other auto replacements **/
-	public SmartSubstitute smartSubstitute;
-	
-	/** The spell checker for this **/
-	private FancySpellCheck fancySpellCheck;
-	
 	/**
-	 * To be used if one would like a standard FancyTextArea with text.
-	 * @param text is this FancyTextArea's text.
+	 * To be used if the user should be presented with a blank FancyLabel.
 	 */
-	public FancyTextArea(String text) {
-		super(text);
-		setTextArea();
+	public JMLabel() {
+		setLabel();
 	}
 	
 	/**
-	 * Sets the font, the foreground color, and the border. <br>
-	 * Sets word wrap and line wrap to true.
+	 * To be used if there is the label should be titled.
+	 * @param text is the message to be displayed to the user.
 	 */
-	private void setTextArea() {
-		super.setFont(new Font(FancyFont.ARIAL, Font.PLAIN, 15));
-		super.setForeground(FancyColor.DARK_FONT);
-		super.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		super.setWrapStyleWord(true);
-		super.setLineWrap(true);
+	public JMLabel(String text) {
+		super(text, SwingConstants.CENTER);
+		setLabel();
+	}
+	
+	/**
+	 * To be used if the label should be a color besides dark gray.
+	 * @param text is the content to be displayed to the user.
+	 * @param color is the FancyLabel's color.
+	 */
+	public JMLabel(String text, Color color) {
+		super(text, SwingConstants.CENTER);
+
+		setForeground(color);
+		setLabel();
+	}
+	
+	/**
+	 * Sets the label font and empty border.
+	 */
+	private void setLabel() {
+		setOpaque(true);
+		setFont(JMFont.DEFAULT);
+		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+	}
+	
+	/**
+	 * Sets the foreground and the background color of a JComponent.
+	 * @param background is the background color.
+	 * @param foreground is the foreground color.
+	 */
+	public void setColor(Color background, Color foreground) {			
+		this.setBackground(background);
+		this.setForeground(foreground);
+	}
+
+	/**
+	 * Sets the border: a 'padding' of 5 and then a line.
+	 * @param color is the color of the border to be added.
+	 * @param top is the width of the top line.
+	 * @param left is the width of the left line.
+	 * @param bot is the width of the bottom line.
+	 * @param right is the width of the right line.
+	 */
+	public void setBorder(Color color, int top, int left, int bot, int right) {
+		setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createMatteBorder(top, left, bot, right, color),
+				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+	}
+	
+	/**
+	 * Changes this components size.
+	 * @param height is the new height.
+	 * @param width is the new width.
+	 */
+	public void setAbsoluteSize(int width, int height) {
+		this.setMinimumSize(new Dimension(width, height));
+		this.setPreferredSize(new Dimension(width, height));
+		this.setMaximumSize(new Dimension(width, 100));
 		
-		this.smartSubstitute = new SmartSubstitute(this);
-	}
-	
-	public void enableSpellCheck(WordList wordlist) {
-		fancySpellCheck = new FancySpellCheck(this, wordlist);
-	}
-	
-	public void disableSpellCheck() {
-		if(fancySpellCheck != null) {
-			fancySpellCheck.enableSpellCheck(false);
-		}
+		this.revalidate();
+		this.repaint();
 	}
 	
 	/**
-	 * Returns the JPopupMenu if fancySpellCheck has been enabled; otherwise 
-	 * throws an exception.
-	 * @return the JPopupMenu for the fancySpellChecker.
+	 * Changes the size of the font.
 	 */
-	public JPopupMenu getJPopupMenu() {
-		if(fancySpellCheck != null) {
-			return fancySpellCheck.menu;
-		} else {
-			throw new NoSuchElementException();
-		}
+	public void setFontSize(int fontSize) {
+		this.setFont(new Font(this.getFont().getName(), this.getFont().getStyle(), fontSize));
 	}
 	
 	/**
@@ -89,19 +114,6 @@ public class FancyTextArea extends JTextArea {
 	}
 	
 	/**
-	 * Use a lambda to write a keyTyped listener.
-	 * @param listener is the lambda to be accepted.
-	 */
-	public void addKeyTypedListener(Consumer<KeyEvent> listener) {
-		this.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				listener.accept(e);
-			}
-		});
-	}
-
-	/**
 	 * Use a lambda to write a keyReleased listener.
 	 * @param listener is the lambda to be accepted.
 	 */
@@ -113,7 +125,7 @@ public class FancyTextArea extends JTextArea {
 			}
 		});
 	}
-
+	
 	/**
 	 * Use a lambda to write a mouseClicked listener.
 	 * @param listener is the lambda to be accepted.
@@ -126,7 +138,7 @@ public class FancyTextArea extends JTextArea {
 			}
 		});
 	}
-
+	
 	/**
 	 * Use a lambda to write a mousePress listener.
 	 * @param listener is the lambda to be accepted.
@@ -139,7 +151,7 @@ public class FancyTextArea extends JTextArea {
 			}
 		});
 	}
-
+	
 	/**
 	 * Use a lambda to write a mousePress listener.
 	 * @param listener is the lambda to be accepted.
@@ -152,7 +164,7 @@ public class FancyTextArea extends JTextArea {
 			}
 		});
 	}
-
+	
 	/**
 	 * Use a lambda to write a focusGained listener.
 	 * @param listener is the lambda to be accepted.
@@ -165,7 +177,7 @@ public class FancyTextArea extends JTextArea {
 			}
 		});
 	}
-
+	
 	/**
 	 * Use a lambda to write a focusLost listener.
 	 * @param listener is the lambda to be accepted.
@@ -177,20 +189,5 @@ public class FancyTextArea extends JTextArea {
 				listener.accept(e);
 			}
 		});
-	}
-	
-	public static void main(String args[]) {
-		FancyFrame frame = new FancyFrame();
-		
-		FancyTextArea text = new FancyTextArea("Hello! This is a test.");
-		
-		new FancySpellCheck(text, new WordList());
-		
-		frame.add(text);
-
-		frame.setSize(new Dimension(300, 300));
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(FancyFrame.EXIT_ON_CLOSE);
-		
 	}
 }

@@ -8,21 +8,21 @@ import javax.swing.SwingConstants;
 
 import com.sun.glass.events.KeyEvent;
 
-import displays.FancyComponentUtils;
-import displays.FancyPanel;
+import displays.JMUtils;
+import displays.JMPanel;
 
-public class FormLabel extends FancyPanel {
+public class FormLabel extends JMPanel {
 	private static final long serialVersionUID = 1128543808968130465L;
 
-	public FancyTextField field;
+	public JMTextField field;
 
-	public FancyLabel label;
+	public JMLabel label;
 
 	public FormLabel(String s, int width, int height) {
 		setLayout(new BorderLayout());
 		setOpaque(false);
 
-		label = new FancyLabel(s);
+		label = new JMLabel(s);
 		label.setOpaque(false);
 		label.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		label.setHorizontalAlignment(SwingConstants.LEFT);
@@ -33,7 +33,7 @@ public class FormLabel extends FancyPanel {
 			}
 		});
 
-		field = new FancyTextField(s);
+		field = new JMTextField(s);
 		field.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		field.addFocusLostListener(e -> {
 			label.setText(field.getText());
@@ -83,9 +83,9 @@ public class FormLabel extends FancyPanel {
 	}
 
 	public void setSize(int width, int height) {
-		FancyComponentUtils.setFixedSize(this, width, height);
-		FancyComponentUtils.setFixedSize(label, width, height);
-		FancyTextUtils.setFixedSize(field, width, height);
+		JMUtils.setFixedSize(this, width, height);
+		JMUtils.setFixedSize(label, width, height);
+		JMTextUtils.setFixedSize(field, width, height);
 		revalidate();
 		repaint();
 	}

@@ -10,7 +10,7 @@ import javax.swing.JComponent;
 
 import text.Word;
 
-public class FancyTab {
+public class JMTab {
 
 	public String name;
 
@@ -29,7 +29,7 @@ public class FancyTab {
 
 	public Consumer<MouseEvent> listener;
 	
-	public FancyTab(String title, int width, int height, 
+	public JMTab(String title, int width, int height, 
 			int posn, Font theFont, JComponent content) {
 		this.name       = title;
 		this.width      = width;

@@ -10,9 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import colors.FancyColor;
+import colors.JMColor;
 
-public class FancyProgressBar extends JPanel {
+public class JMProgressBar extends JPanel {
 	private static final long serialVersionUID = -2404702751477071566L;
 
 	/** The number of tasks until finished **/
@@ -25,12 +25,12 @@ public class FancyProgressBar extends JPanel {
 	private int drawWidth = 0;
 	
 	/** The color of the progress bar **/
-	public Color front = FancyColor.DARK_GRAY;
+	public Color front = JMColor.DARK_GRAY;
 	
 	/** The color behind the progress bar **/
-	public Color back = FancyColor.LIGHT_GRAY;
+	public Color back = JMColor.LIGHT_GRAY;
 	
-	public FancyProgressBar(int numTasks) {
+	public JMProgressBar(int numTasks) {
 		this.numTasks = numTasks;
 		
 		
@@ -81,7 +81,7 @@ public class FancyProgressBar extends JPanel {
 
 		JFrame frame = new JFrame();
 
-		frame.add(new FancyProgressBar(25));
+		frame.add(new JMProgressBar(25));
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
