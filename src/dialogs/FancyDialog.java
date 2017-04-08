@@ -45,6 +45,8 @@ public class FancyDialog extends JDialog {
 
 	FancyButton cancelButton;
 
+	public DialogResult result = DialogResult.NONE_SELECTED;
+	
 	private Color background = FancyColor.decode("#ffffff");
 	private Color confirm_mouse_over = FancyColor.decode("#0078d7");
 	private Color deny_mouse_over = FancyColor.DARK_RED;
@@ -68,6 +70,12 @@ public class FancyDialog extends JDialog {
 		confirmButton.setText(confirmText);
 		confirmButton.addActionListener(e -> {
 			confirmListener.actionPerformed(e);
+			result = DialogResult.CONFIRM;
+			dispose();
+		});
+		
+		cancelButton.addActionListener(e -> {
+			result = DialogResult.CANCEL;
 			dispose();
 		});
 
@@ -104,16 +112,19 @@ public class FancyDialog extends JDialog {
 		confirmButton.setText(confirmText);
 		confirmButton.addActionListener(e -> {
 			confirmListener.actionPerformed(e);
+			result = DialogResult.CONFIRM;
 			dispose();
 		});
 
 		denyButton.setText(denyText);
 		denyButton.addActionListener(e -> {
 			denyListener.actionPerformed(e);
+			result = DialogResult.DENY;
 			dispose();
 		});
 
 		cancelButton.addActionListener(e -> {
+			result = DialogResult.CANCEL;
 			dispose();
 		});
 
@@ -208,7 +219,7 @@ public class FancyDialog extends JDialog {
 				new JLabel().getFont().getStyle(), 
 				new JLabel().getFont().getSize());
 	}
-
+	
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
