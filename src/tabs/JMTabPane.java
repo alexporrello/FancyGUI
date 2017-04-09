@@ -26,7 +26,7 @@ import colors.JMColor;
 import displays.JMFrame;
 import displays.JMPanel;
 
-public class JMTabPanel extends JMPanel {
+public class JMTabPane extends JMPanel {
 	private static final long serialVersionUID = 3467583173655155282L;
 
 	private FancyTabOrganizer tabOrganizer = new FancyTabOrganizer();
@@ -35,7 +35,7 @@ public class JMTabPanel extends JMPanel {
 
 	private Color xColor = JMColor.DARK_GRAY;
 
-	public JMTabPanel() {	
+	public JMTabPane() {	
 		setLayout(new BorderLayout());
 
 		add(tabOrganizer, BorderLayout.NORTH);
@@ -388,7 +388,7 @@ public class JMTabPanel extends JMPanel {
 		frame.setLocationByPlatform(true);
 		frame.setSize(new Dimension(400, 50));
 
-		JMTabPanel ftpv2 = new JMTabPanel();
+		JMTabPane ftpv2 = new JMTabPane();
 
 		ftpv2.addTab("Testing", test(Color.RED), e -> {
 			ftpv2.removeTab("Testing");
