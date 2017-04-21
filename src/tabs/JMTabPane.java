@@ -35,23 +35,24 @@ public class JMTabPane extends JMPanel {
 
 	private Color xColor = JMColor.DARK_GRAY;
 
+	/**
+	 * Changes between the JComponent that is displayed.
+	 * @param newTab the tab whose JComponent is to be displayed
+	 */
+	private void switchJComponentInView(JMTab newTab) {
+		remove(inView);
+		inView = newTab.content;
+		add(inView, BorderLayout.CENTER);
+	
+		revalidate();
+		repaint();
+	}
+
 	public JMTabPane() {	
 		setLayout(new BorderLayout());
 
 		add(tabOrganizer, BorderLayout.NORTH);
 		add(inView, BorderLayout.CENTER);
-	}
-
-	/**
-	 * Returns selected component in {@link #tabOrganizer}.
-	 * @return
-	 */
-	public JComponent selectedComponent() {
-		return getSelectedTab().content;
-	}
-
-	public JMTab getSelectedTab() {
-		return tabOrganizer.tabs.selected;
 	}
 
 	/**
@@ -74,16 +75,10 @@ public class JMTabPane extends JMPanel {
 	}
 
 	/**
-	 * Changes between the JComponent that is displayed.
-	 * @param newTab the tab whose JComponent is to be displayed
+	 * @return The selected component in {@link #tabOrganizer}.
 	 */
-	private void switchJComponentInView(JMTab newTab) {
-		remove(inView);
-		inView = newTab.content;
-		add(inView, BorderLayout.CENTER);
-
-		revalidate();
-		repaint();
+	public JComponent selectedComponent() {
+		return tabOrganizer.tabs.selected.content;
 	}
 
 	public ArrayList<JMTab> getTabArray() {
