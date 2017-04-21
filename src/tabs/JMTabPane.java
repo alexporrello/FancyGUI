@@ -69,7 +69,7 @@ public class JMTabPane extends JMPanel {
 	 * Method used to remove a tab.
 	 * @param tab the tab to be removed
 	 */
-	public void removeTab(String tabTitle) {
+	public void closeTab(String tabTitle) {
 		tabOrganizer.removeTab(tabTitle);
 	}
 
@@ -89,7 +89,7 @@ public class JMTabPane extends JMPanel {
 	public ArrayList<JMTab> getTabArray() {
 		return tabOrganizer.tabs.getAllTabs();
 	}
-	
+
 	/**
 	 * This is where all of the tab magic happens.
 	 * @author Alexander Porrello
@@ -133,14 +133,16 @@ public class JMTabPane extends JMPanel {
 			returnTimer = new Timer(0, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent ae) {
-					if(pressedTab.x > pressedTab.determineXPosition()) {
-						pressedTab.x = pressedTab.x - 1;
-						repaint();
-					} else if(pressedTab.x < pressedTab.determineXPosition()) {
-						pressedTab.x = pressedTab.x + 1;
-						repaint();
-					} else {
-						returnTimer.stop();
+					if(pressedTab != null) {
+						if(pressedTab.x > pressedTab.determineXPosition()) {
+							pressedTab.x = pressedTab.x - 1;
+							repaint();
+						} else if(pressedTab.x < pressedTab.determineXPosition()) {
+							pressedTab.x = pressedTab.x + 1;
+							repaint();
+						} else {
+							returnTimer.stop();
+						}
 					}
 				}
 			});
@@ -391,13 +393,13 @@ public class JMTabPane extends JMPanel {
 		JMTabPane ftpv2 = new JMTabPane();
 
 		ftpv2.addTab("Testing", test(Color.RED), e -> {
-			ftpv2.removeTab("Testing");
+			ftpv2.closeTab("Testing");
 		}, f -> {});
 		ftpv2.addTab("Testing 2", test(Color.BLUE), e -> {
-			ftpv2.removeTab("Testing 2");
+			ftpv2.closeTab("Testing 2");
 		}, f -> {});
 		ftpv2.addTab("Testing 3", test(Color.ORANGE), e -> {
-			ftpv2.removeTab("Testing 3");
+			ftpv2.closeTab("Testing 3");
 		}, f -> {});
 
 		frame.add(ftpv2);
