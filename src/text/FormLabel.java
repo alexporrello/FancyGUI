@@ -1,12 +1,13 @@
 package text;
 
 import java.awt.BorderLayout;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 
-import com.sun.glass.events.KeyEvent;
+
 
 import displays.JMUtils;
 import displays.JMPanel;
