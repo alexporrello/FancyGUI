@@ -121,6 +121,7 @@ public class JMSpellCheck {
 
 			private void showPopupMenu(MouseEvent e){
 
+				@SuppressWarnings("deprecation")
 				int point = jText.viewToModel(e.getPoint());
 
 				menu.removeAll();
