@@ -1,6 +1,6 @@
 package word;
 
-import text.Unicode;
+import text.Special;
 
 public class SpellCheckWord {
 
@@ -42,15 +42,15 @@ public class SpellCheckWord {
 			}
 		}
 
-		word = word.replace(Unicode.ellipsis, "");
-		word = word.replace(Unicode.rightDoubleQuotationMark, "");
-		word = word.replace(Unicode.leftDoubleQuotationMark, "");
+		word = word.replace(Special.Unicode.ellipsis, "");
+		word = word.replace(Special.Unicode.rightDoubleQuotationMark, "");
+		word = word.replace(Special.Unicode.leftDoubleQuotationMark, "");
 
-		if(word.startsWith(Unicode.leftSingleQuotationMark)) {
+		if(word.startsWith(Special.Unicode.leftSingleQuotationMark)) {
 			word = word.substring(0, word.length());
 		}
 
-		if(word.endsWith(Unicode.rightSingleQuotationMark)) {
+		if(word.endsWith(Special.Unicode.rightSingleQuotationMark)) {
 			word = word.substring(0, word.length()-1);
 		}
 

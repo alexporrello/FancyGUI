@@ -42,17 +42,17 @@ public class SmartSubstitute {
 							int before = (int) jText.getText().charAt(caretPosn-1);
 
 							if (before == 10 || before == 9 || before == 32) {
-								replaceRange(Unicode.leftDoubleQuotationMark, caretPosn, caretPosn);
+								replaceRange(Special.Unicode.leftDoubleQuotationMark, caretPosn, caretPosn);
 								e.consume();
 //							} else if(before == 32) {
-//								replaceRange(Unicode.leftDoubleQuotationMark, caretPosn, caretPosn);
+//								replaceRange(Special.Unicode.leftDoubleQuotationMark, caretPosn, caretPosn);
 //								e.consume();
 							} else {
-								replaceRange(Unicode.rightDoubleQuotationMark, caretPosn, caretPosn);
+								replaceRange(Special.Unicode.rightDoubleQuotationMark, caretPosn, caretPosn);
 								e.consume();
 							}
 						} else {
-							replaceRange(Unicode.leftDoubleQuotationMark, caretPosn, caretPosn);
+							replaceRange(Special.Unicode.leftDoubleQuotationMark, caretPosn, caretPosn);
 							e.consume();
 						}
 					}
@@ -62,17 +62,17 @@ public class SmartSubstitute {
 							int before = (int) jText.getText().charAt(caretPosn-1);
 
 							if (before == 10 || before == 9) {
-								replaceRange(Unicode.leftSingleQuotationMark, caretPosn, caretPosn);
+								replaceRange(Special.Unicode.leftSingleQuotationMark, caretPosn, caretPosn);
 								e.consume();
 							} else if(before == 32) {
-								replaceRange(Unicode.leftSingleQuotationMark, caretPosn, caretPosn);
+								replaceRange(Special.Unicode.leftSingleQuotationMark, caretPosn, caretPosn);
 								e.consume();
 							} else {
-								replaceRange(Unicode.rightSingleQuotationMark, caretPosn, caretPosn);
+								replaceRange(Special.Unicode.rightSingleQuotationMark, caretPosn, caretPosn);
 								e.consume();
 							}
 						} else {
-							replaceRange(Unicode.leftSingleQuotationMark, caretPosn, caretPosn);
+							replaceRange(Special.Unicode.leftSingleQuotationMark, caretPosn, caretPosn);
 							e.consume();
 						}
 					}
@@ -87,10 +87,10 @@ public class SmartSubstitute {
 
 						if(isCliche) {
 							if(jText.getText().charAt(caretPosn-5) == 67) {
-								replaceRange("Clich" + Unicode.latinSmallLetterEWithAcute, caretPosn-5, caretPosn);
+								replaceRange("Clich" + Special.Unicode.latinSmallLetterEWithAcute, caretPosn-5, caretPosn);
 								e.consume();
 							} else if(jText.getText().charAt(caretPosn-5) == 99) {
-								replaceRange("clich" + Unicode.latinSmallLetterEWithAcute, caretPosn-5, caretPosn);
+								replaceRange("clich" + Special.Unicode.latinSmallLetterEWithAcute, caretPosn-5, caretPosn);
 								e.consume();
 							}
 						}
@@ -103,18 +103,18 @@ public class SmartSubstitute {
 							int before = (int) jText.getText().charAt(caretPosn-1);
 
 							if(before == 82 || before == 114) {
-								replaceRange(Unicode.registered, caretPosn-2, caretPosn);
+								replaceRange(Special.Unicode.registered, caretPosn-2, caretPosn);
 								e.consume();
 							}
 
 							if(before == 69 || before == 101) {
-								replaceRange(Unicode.euro, caretPosn-2, caretPosn);
+								replaceRange(Special.Unicode.euro, caretPosn-2, caretPosn);
 								e.consume();
 							}
 
 
 							if(before == 67 || before == 99) {
-								replaceRange(Unicode.copyright, caretPosn-2, caretPosn);
+								replaceRange(Special.Unicode.copyright, caretPosn-2, caretPosn);
 								e.consume();
 							}
 						}
@@ -125,7 +125,7 @@ public class SmartSubstitute {
 							int before = (int) jText.getText().charAt(caretPosn-1);
 
 							if(before == 77 || before == 109) {
-								replaceRange(Unicode.euro, caretPosn-3, caretPosn);
+								replaceRange(Special.Unicode.euro, caretPosn-3, caretPosn);
 								e.consume();
 							}
 						}
@@ -138,7 +138,7 @@ public class SmartSubstitute {
 							int before = (int) jText.getText().charAt(caretPosn-1);
 
 							if(before == 45) {
-								replaceRange(Unicode.emDash, caretPosn-1, caretPosn);
+								replaceRange(Special.Unicode.emDash, caretPosn-1, caretPosn);
 								e.consume();
 							}
 						}
@@ -151,7 +151,7 @@ public class SmartSubstitute {
 							int before = (int) jText.getText().charAt(caretPosn-1);
 
 							if(before == 46) {
-								replaceRange(Unicode.ellipsis, caretPosn-2, caretPosn);
+								replaceRange(Special.Unicode.ellipsis, caretPosn-2, caretPosn);
 								e.consume();
 							}
 						}

@@ -28,9 +28,8 @@ import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.Highlight;
 import javax.swing.text.JTextComponent;
 
-import text.Ascii;
+import text.Special;
 import text.StringUtils;
-import text.Unicode;
 import word.SpellCheckWord;
 import word.WordList;
 
@@ -40,9 +39,9 @@ public class JMSpellCheck {
 	private ArrayList<Error> errorLocations = new ArrayList<Error>();
 
 	/** When any of these are encountered, re-check spelling **/
-	private int[] check = {Ascii.space, Ascii.backspace, Ascii.comma, Ascii.period, 
-			Ascii.delete, Ascii.letter_v, Ascii.question_mark, Ascii.exclaimation, 
-			Ascii.colon, Ascii.semi_colon};
+	private int[] check = {Special.Ascii.space, Special.Ascii.backspace, Special.Ascii.comma, Special.Ascii.period, 
+			Special.Ascii.delete, Special.Ascii.letter_v, Special.Ascii.question_mark, Special.Ascii.exclaimation, 
+			Special.Ascii.colon, Special.Ascii.semi_colon};
 
 	/** If true, checks for spelling errors **/
 	private Boolean spellCheckEnable = true;
@@ -191,8 +190,8 @@ public class JMSpellCheck {
 							replaceRange(jText, beginIndex, endIndex, autoCorrectOptions.get(wordCopy));
 							checkSpelling(jText, words);
 						} else {
-							if(wordCopy.contains(Unicode.rightSingleQuotationMark + "s")) {
-								String tempWord = wordCopy.replace(Unicode.rightSingleQuotationMark + "s", "");
+							if(wordCopy.contains(Special.Unicode.rightSingleQuotationMark + "s")) {
+								String tempWord = wordCopy.replace(Special.Unicode.rightSingleQuotationMark + "s", "");
 								
 								if(!words.contains(tempWord)) {
 									this.paintRedUnderline(jText, beginIndex, endIndex, wordCopy);

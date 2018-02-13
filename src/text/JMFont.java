@@ -23,5 +23,5 @@ public class JMFont {
 	public static final String GOTHAM_XNARROW_BOLD        = "Gotham XNarrow Bold";
 	public static final String GOTHAM_XNARROW_BOLD_ITALIC = "Gotham XNarrow Bold Italic";
 	
-	public static final Font   DEFAULT = new Font("Arial", Font.PLAIN, 15);
+	public static final Font DEFAULT = new Font("Arial", Font.PLAIN, 15);
 }

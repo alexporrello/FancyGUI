@@ -1,5 +1,6 @@
 package text;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
@@ -44,20 +45,20 @@ public class Word implements Serializable {
 	public void setFont(Font font) {
 		this.font = font;
 				
-		WordDimension size = getWordSize();
+		Dimension size = getWordSize();
 		
 		width  = size.width;
 		height = size.height;
 	}
 	
 	/** Calculates the size of a word when drawn **/
-	private WordDimension getWordSize() {
+	private Dimension getWordSize() {
 		AffineTransform   affinetransform = new AffineTransform();    
 		FontRenderContext frc             = new FontRenderContext(affinetransform,true,true);  
 		int               width           = (int)(font.getStringBounds(word, frc).getWidth());
 		int               height          = (int)(font.getStringBounds(word, frc).getHeight());
 
-		return new WordDimension(width, height);
+		return new Dimension(width, height);
 	}
 	
 	/** Returns the number of characters in the word **/
